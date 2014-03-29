@@ -2,7 +2,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.forms.models import modelform_factory, modelformset_factory
-from models import extSMS
+from models import SMS
 
 @login_required
 def llistaSMS(request):
@@ -10,8 +10,8 @@ def llistaSMS(request):
     #Fer que no surti el numero
     #Treballar amb multiples formularis
 
-    SmsFormet = modelformset_factory(extSMS)
-    formset = SmsFormet(queryset=extSMS.objects.filter(estat='res', enviat=False))
+    SmsFormet = modelformset_factory(SMS)
+    formset = SmsFormet(queryset=SMS.objects.filter(estat='res', enviat=False))
 
     if request.method == 'POST':
         pass

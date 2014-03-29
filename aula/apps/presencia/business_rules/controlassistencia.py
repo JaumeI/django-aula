@@ -7,6 +7,9 @@ from django.db.models import get_model
 from aula.apps.incidencies.business_rules.incidencia import incidencia_despres_de_posar
 from datetime import timedelta
 
+#INSRM DEBUG:: Això es pel try catch
+import sys
+
 #-------------ControlAssistencia-------------------------------------------------------------      
 
 def controlAssistencia_clean( instance ):
@@ -129,50 +132,35 @@ def controlAssistencia_post_save(sender, instance, created, **kwargs):
 
     try:
         #Els SMS estàn activats
+        SMS = get_model('extSMS', 'SMS')
+        FaltaSMS = get_model('extSMS', 'FaltaSMS')
 
-        #TODO:
-        #   - Quan una falta d'un alumne i un dia en concret es justifica, se li resta
-        #     un el contador de faltes que té aquell alumne aquell dia
-        #   - Buscar un altre mètode de fer el ja_hi_es per no fer dos consultes a la BD
-        #
-        #
-        extSMS = get_model('extSMS', 'extSMS')
+
+        sms = SMS.objects.filter(alumne = instance.alumne, dia = instance.impartir.dia_impartir)
+        hora = instance.impartir.horari.hora
+        falta = FaltaSMS.objects.filter(sms = sms, hora = hora)
+
         if instance.estat and instance.estat.codi_estat == 'F':
-            print "Detecto una falta"
-            # Aquesta linia peta, s'ha de mirar més a fons!!
-            # Falta agafar bé el dia, peta per culpa d'això
-            #ja_hi_es = extSMS.objects.filter(alumne = instance.alumne, dia = instance.impartir.dia_impartir).exists()
-            #print ja_hi_es
-            if not False:
-                print "Creo un SMS"
-                print instance.impartir.dia_impartir
-                extSMS.objects.create(alumne = instance.alumne,
+            if not sms.exists(): #Crear SMS nou
+                sms = SMS.objects.create(alumne = instance.alumne,
                                       dia = instance.impartir.dia_impartir)
-            else:
-                print "Suma una falta al SMS"
-                sms = extSMS.objects.filter(alumne = instance.alumne, dia = instance.impartir.dia_impartir)
-                sms.faltes += 1
                 sms.save()
+            else:
+                sms = sms[0]
 
+            if not falta.exists():
+                falta = FaltaSMS.objects.create(sms = sms, hora = hora)
+                falta.save()
 
-        # Intenta agafar el sms per alumne i dia
-        # Si el troba: Li resta una falta
-        #   Si arriba a 0 el borra, sinó el guarda amb el número de faltes que tingui
-        # Això falta mirar-ho, perque:
-        # Que passa si jo passo llista a les 8 i en Paco ha faltat? Li poso falta
-        # Però a les 9 passo llista i en Paco hi és, li treurà una falta, arribarà a 0, i borrarà l'SMS???
-        # S'hauria de fer només QUAN ES MODIFICA una falta, no quan es crea...
         elif instance.estat:
-            try:
-                #sms = extSMS.objects.filter(alumne = instance.alumne, dia = instance.impartir.dia_impartir.strftime( "%d/%m/%Y"))
-                #sms.faltes -= 1
-                #if sms.faltes == 0:
-                #    sms.delete()
-                #else:
-                #    sms.save()
-                pass
-            except:
-                pass
+            if falta.exists():
+                falta.delete()
+            faltes = FaltaSMS.objects.filter(sms = sms)
+            if len(faltes) == 0:
+                sms.delete()
+    except TypeError as e:
+        print "TypeError: " + e.message
+        pass
     except:
         pass
 
