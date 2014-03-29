@@ -3,29 +3,25 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.forms.models import modelform_factory, modelformset_factory
 from models import SMS
+from forms import smsForm
+from django.db.models import Q
 
 @login_required
 def llistaSMS(request):
     #TODO:
-    #Fer que no surti el numero
+    # Cal fer un cron::
+    #   Cada dia a les 00:00 tots els anulats: enviat = True
     #Treballar amb multiples formularis
-
-    SmsFormet = modelformset_factory(SMS)
-    formset = SmsFormet(queryset=SMS.objects.filter(estat='res', enviat=False))
-
+    SmsFormset = modelformset_factory(SMS, form=smsForm, extra = 0)
     if request.method == 'POST':
-        pass
+        #ACTUALITZA ELS PUTOS FORMS!!!
+        print "Entro per POST"
+        formset = SmsFormset(request.POST)
+        print "Guardo el FORMSET"
+        if formset.is_valid():
+            formset.save()
 
-
-        #if form.is_valid():
-        #    if form.cleaned_data['envia']:
-        #        try:
-        #            extSMS.objects.get(incidencia=form.cleaned_data['incidencia']).delete()
-        #        except extSMS.DoesNotExist:
-        #            pass
-
-
-
+    formset = SmsFormset(queryset=SMS.objects.filter(~Q(estat='enviar'), enviat=False))
     return render(request, 'mostraSMS.html', {'formset': formset})
 
 

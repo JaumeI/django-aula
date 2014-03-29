@@ -1,18 +1,18 @@
 from django import forms
 import django
-from django.forms import ModelForm, TextInput, RadioSelect
+from django.forms import ModelForm, TextInput, RadioSelect, Select
 
-from aula.apps.extSMS.models import extSMS
+from aula.apps.extSMS.models import SMS
 
 
 
 class smsForm(ModelForm):
 
     class Meta:
-        model = extSMS
-        fields = ['falta', 'estat']
-
+        model = SMS
+        fields = ['alumne', 'dia', 'estat', 'intents']
         widgets = {
-            'falta': TextInput(attrs={'class': 'disabled form-control', 'readonly': 'readonly'}),
-            'estat': RadioSelect()
+            'alumne': Select(attrs={'class': 'disabled form-control', 'readonly': 'readonly'}),
+            'estat': RadioSelect(),
+            'intents': TextInput(attrs={'class': 'disabled form-control', 'readonly': 'readonly'}),
         }

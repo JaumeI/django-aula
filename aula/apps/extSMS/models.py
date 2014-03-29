@@ -14,9 +14,9 @@ OPCIONS = (
 class SMS(models.Model):
     alumne = models.ForeignKey(Alumne)
     dia = models.DateField(db_index=True)
-    estat = models.CharField(max_length=20, choices=OPCIONS, default='res')
     intents = models.IntegerField(default=0)
     enviat = models.BooleanField(default=False)
+    estat = models.CharField(max_length=20, choices=OPCIONS, default='res')
 
 
     def __unicode__(self):
