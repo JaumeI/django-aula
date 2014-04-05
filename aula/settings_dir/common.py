@@ -73,7 +73,7 @@ STATIC_ROOT = location('../static/')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/site-css/'  #sobreescriure-la al 'settings_local.py'
+STATIC_URL = '/site-css/'  #sobreescriure-la al 'settings_local.sample'
 
 # Additional locations of static files
 STATICFILES_DIRS = [

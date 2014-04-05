@@ -9,7 +9,7 @@ URL_DJANGO_AULA = r'http://djau.ctrlaltd.webfactional.com'
 ALLOWED_HOSTS = [ 'djau.ctrlaltd.webfactional.com', ]
 
 #En cas de tenir un arbre de predicció cal posar-lo aquí:
-# from lxml import etree  
+# from lxml import etree
 # PREDICTION_TREE=etree.parse( r'path_fins_el_model' )
 PREDICTION_TREE = None
 

@@ -2,6 +2,10 @@
 # Django settings for aula project.
 
 from dev import *
+try:
+    from sms_config import *
+except:
+    pass
 location = lambda x: os.path.join(PROJECT_DIR, x)
 
 TEMPLATE_DIRS = [
