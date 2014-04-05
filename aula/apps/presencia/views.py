@@ -110,7 +110,7 @@ def regeneraImpartir(request):
 @login_required
 @group_required(['professors'])
 def mostraImpartir( request, year=None, month=None, day=None ):
-    
+
     import datetime as t
     
     credentials = getImpersonateUser(request) 

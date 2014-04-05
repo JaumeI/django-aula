@@ -25,7 +25,7 @@ from aula.utils.decorators import group_required
 
 @login_required
 def elMeuMur( request, pg ):
-    
+
     credentials = tools.getImpersonateUser(request) 
     (user, l4) = credentials
         

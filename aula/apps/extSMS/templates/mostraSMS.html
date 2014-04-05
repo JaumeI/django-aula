@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block head %}
+  {{ head }}
+{% endblock %}
+
 {% block content  %}
     <h1>Llista de tots els SMS</h1>
     <div class="row row-padded hidden-xs">
@@ -15,9 +19,8 @@
 
     {% if formset %}
         <div class="row">
-            <p class="col-lg-2">Alumne</p>
-            <p class="col-lg-2">Dia</p>
-            <p class="col-lg-2">Estat</p>
+            <p class="col-lg-4">Alumne</p>
+            <p class="col-lg-4">Estat</p>
             <p class="col-lg-2">Intents</p>
         </div>
     <form action="" class="inline-form" method="POST">{% csrf_token %}
@@ -25,11 +28,18 @@
     {% for form in formset %}
 
         <div class="row row-padded" style="background-color:{% cycle '#f5f5f5' 'white' %}">
-
+        <div class="col-lg-4"> {{ form.instance.alumne }}</div>
         {{ form.id }}
         {% for field in form.visible_fields %}
-	        <div class=" col-lg-2 col-sm-8 col-xs-12">
-	            {{ field }}
+	        <div class=" col-lg-4 col-sm-8 col-xs-12">
+	            <div class="btn-group">
+                {% if field.field_type == "RadioSelect" %}
+                    <p>YES!!</p>
+                {% endif %}
+                {% for x in field.choices %}
+                    P
+                {% endfor %}
+                </div>
 		        {% if field.errors %}
 			        <div class="alert alert-danger">
 			        <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -42,6 +52,7 @@
 		        {% endif %}
 	        </div>
         {% endfor %}
+        <div class="col-lg-2"> {{ form.instance.intents }}</div>
         </div>
     {% empty %}
         <h2>No hi han SMS pendents d'enviar.</h2>

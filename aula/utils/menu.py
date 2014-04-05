@@ -79,6 +79,9 @@ def calcula_menu( user , path ):
     arbre = (
                #--Aula--------------------------------------------------------------------------
                #  id,    nom     vista                 seg      label
+
+
+
                ('aula', 'Aula', 'blanc__blanc__blanc', pr, teExpulsionsSenseTramitar or hiHaUnaQualitativaOberta ,
                   (
                       ("Presencia", 'aula__horari__horari', pr, None, None ),
@@ -184,12 +187,13 @@ def calcula_menu( user , path ):
                ),
              
                #--Consergeria--------------------------------------------------------------------------
-               ('consergeria', 'Psicopedagog', 'consergeria__missatges__envia_tutors', co, None,
+               ('consergeria', 'Consergeria', 'consergeria__missatges__sms', co, None,
                   (
+                      ("SMS", 'consergeria__missatges__sms', co, None, None ),
                       ("Missatge a tutors", 'consergeria__missatges__envia_tutors', co, None, None ),
+
                    )
                ),
-
                #--relacio_families--------------------------------------------------------------------------
                ('relacio_families', u'Famílies', 'relacio_families__informe__el_meu_informe', al, None,
                   (
@@ -206,7 +210,6 @@ def calcula_menu( user , path ):
                       ("About", 'varis__about__about', tots, None, None ),                      
                    )
                ),
-
              )
     
     for item_id, item_label, item_url, item_condicio, alerta , subitems in arbre:
