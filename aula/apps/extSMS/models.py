@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.db import models
 
 # Create your models here.
@@ -15,6 +14,7 @@ class SMS(models.Model):
     alumne = models.ForeignKey(Alumne)
     dia = models.DateField(db_index=True)
     intents = models.IntegerField(default=0)
+    telefon = models.CharField(max_length=9, default='---')
     enviat = models.BooleanField(default=False)
     estat = models.CharField(max_length=20, choices=OPCIONS, default='res')
 
@@ -36,3 +36,10 @@ class FaltaSMS(models.Model):
 
     def __unicode__(self):
         return str(self.sms.alumne) + " " + str(self.sms.dia) + " " + str(self.hora)
+
+class TelefonSMS(models.Model):
+    telefon = models.CharField(max_length=120)
+    sms = models.ForeignKey(SMS)
+
+    def __unicode__(self):
+        return self.telefon

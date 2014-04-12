@@ -1,14 +1,17 @@
 # This Python file uses the following encoding: utf-8
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 import datetime as dt
+from datetime import timedelta
+import re
+
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.db.models import get_model
+
 from aula.apps.usuaris.models import User2Professor, User2Professional
 from aula.apps.tutoria.models import CartaAbsentisme
-from django.db.models import get_model
 from aula.apps.incidencies.business_rules.incidencia import incidencia_despres_de_posar
-from datetime import timedelta
+
 
 #INSRM DEBUG:: Això es pel try catch
-import sys
 
 #-------------ControlAssistencia-------------------------------------------------------------      
 
@@ -134,7 +137,7 @@ def controlAssistencia_post_save(sender, instance, created, **kwargs):
         #Els SMS estàn activats
         SMS = get_model('extSMS', 'SMS')
         FaltaSMS = get_model('extSMS', 'FaltaSMS')
-
+        TelefonSMS = get_model('extSMS', 'TelefonSMS')
 
         sms = SMS.objects.filter(alumne = instance.alumne, dia = instance.impartir.dia_impartir)
         hora = instance.impartir.horari.hora
@@ -145,6 +148,14 @@ def controlAssistencia_post_save(sender, instance, created, **kwargs):
                 sms = SMS.objects.create(alumne = instance.alumne,
                                       dia = instance.impartir.dia_impartir)
                 sms.save()
+                # regex = re.compile("\d{9}\d*")
+                telefons = re.findall("\d{9}\d*", instance.alumne.telefons)
+
+                for telefon in telefons:
+                    tel = telefon[-9:]
+                    if tel[0] == '6' or tel[0] == '7':
+                        print tel
+                        TelefonSMS.objects.create(telefon = tel, sms = sms)
             else:
                 sms = sms[0]
 
