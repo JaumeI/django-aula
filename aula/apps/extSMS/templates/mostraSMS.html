@@ -8,9 +8,7 @@
 {% block content  %}
     <h1>Llista de tots els SMS</h1>
     <div class="row row-padded">
-        <div class="col-sm-3 col-lg-4"></div><!-- no funciona bé el col-offset-6"-->
-        <div class="col-sm-8 col-lg-offset-3 col-lg-4">
-            <!--div data-toggle="buttons-radio"-->
+        <div class="col-sm-4 col-sm-offset-5 col-lg-offset-6 col-md-offset-6 col-md-4 col-lg-4">
             <div class="btn-group">
                 <button type="button" id="totenviar" class="btn btn-default btn-info">enviar</button>
                 <button type="button" id="totanular" class="btn btn-default btn-info">anular</button>
@@ -38,18 +36,22 @@
 
         {% ifnotequal curs form.instance.alumne.grup%}
                 {% set curs = form.instance.alumne.grup %}
-                <div class="col-lg-1"  style="border-bottom: 1px solid black; padding: 2px; width: 100%; margin-bottom: 5px;"><h4>{{ curs }}</h4></div>
+                <div class="col-lg-1 col-sm-1 col-md-1"  style="border-bottom: 1px solid black; padding: 2px; width: 100%; margin-bottom: 5px;"><h4>{{ curs }}</h4></div>
             <div class="clearfix"></div>
             {% endifnotequal %}
 
 
         <div class="row row-padded">
 
-        <div class="col-lg-offset-1 col-lg-3" style="line-height: 34px; vertical-align: middle;"> {{ form.instance.alumne }}</div>
+        <div class="col-lg-4 col-md-4 col-sm-3" style="line-height: 34px; vertical-align: middle;"> {{ form.instance.alumne }}</div>
 
         {{ form.id }}
         {% for field in form.visible_fields %}
-	        <div class=" col-lg-3 col-sm-8 col-xs-12">
+            {% if field.name == 'telefon' %}
+            <div class=" col-lg-2 col-md-2 col-sm-2 col-xs-12 ">
+            {% else %}
+            <div class=" col-lg-3 col-md-3 col-sm-4 col-xs-12">
+            {% endif %}
                 {{ field }}
 		        {% if field.errors %}
 			        <div class="alert alert-danger">
@@ -64,10 +66,11 @@
 	        </div>
         {% endfor %}
         {% if form.instance.intents != 0 %}
-            <div class="col-lg-4" style="color:red;"> Número d'intents erronis: {{ form.instance.intents }}</div>
+            <div class="col-lg-2 col-md-2 col-sm-1 alert-danger" style="vertical-align: middle;" > {{ form.instance.intents }}</div>
         {% endif %}
 
         </div>
+        <hr class="visible-xs"/>
     {% empty %}
         <h2>No hi han SMS pendents d'enviar.</h2>
     {% endfor %}
@@ -100,18 +103,6 @@ function totnet() {
     $(".rad").prop("checked", false);
 }
 $(document).ready(function() {
-    /**Actualitzar classes dels botons**/
-    /*$('.btn-group .btn').click(function() {
-        $(this).siblings().removeClass('btn-success btn-warning');
-    });
-    $('.btnenviar').click(function() {
-       $(this).addClass('btn-success');
-    });
-    $('.btnanular').click(function() {
-       $(this).addClass('btn-warning');
-    });*/
-
-    //Fer funcionar botons superiors
     $('#totenviar').click(function() {
         totnet();
         $('.btnenviar').trigger('click');
