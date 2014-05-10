@@ -173,6 +173,7 @@ INSTALLED_APPS_AULA = [
     'aula.apps.BI',
     'aula.utils',
     'aula.apps.extSMS',
+    'aula.apps.promocions',
 ]
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'

@@ -16,6 +16,11 @@ urlpatterns = patterns('',
     #(r'^horaris/', include('horaris.urls')),
     (r'^extKronowin/', include('aula.apps.extKronowin.urls')),
     (r'^extSaga/', include('aula.apps.extSaga.urls')),
+
+    url(r'^promocions/(?P<curs>\d+)/$', 'aula.apps.promocions.views.mostraCurs', name = 'mostrarCurs'),
+    url(r'^promocions/', 'aula.apps.promocions.views.llistaCursos', name = 'administracio__promocions__llista'),
+
+
     url(r'^sms/', 'aula.apps.extSMS.views.llistaSMS', name = 'consergeria__missatges__sms'),
     url(r'^enviar_prova/', 'aula.apps.extSMS.views.enviaSMS', name = 'consergeria__missatges__enviasms'),
     (r'^presencia/', include('aula.apps.presencia.urls')),

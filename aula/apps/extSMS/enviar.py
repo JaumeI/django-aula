@@ -5,7 +5,7 @@ import MySQLdb
 import time
 from datetime import datetime
 print "Entro al sleep: " + str(datetime.now())
-time.sleep(5) #Aixo a 30 despres ehh
+time.sleep(30) #Aixo a 30 despres ehh
 print "Surto dl sleep: " + str(datetime.now())
 db = MySQLdb.connect(
     host="localhost",
@@ -17,7 +17,7 @@ db = MySQLdb.connect(
 #configuracio de txtlocal
 username = 'jaumei@gmail.com'
 hash = '1653ccf5b03b41d6f98bc5ebd8b77b1e0201417b'
-test_flag = 1 #Canviar per enviar!
+test_flag = 1 #Canviar per enviar! 1 == no enviar 0 == enviar
 sender = 'ATAPIS'
 
 cur = db.cursor()

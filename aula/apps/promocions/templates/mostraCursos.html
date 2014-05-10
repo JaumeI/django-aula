@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ head }}
+{% endblock %}
+
+{% block content  %}
+    <h1>Tria el curs que vols promocionar:</h1>
+    </select>
+    {% for curs in cursos %}
+        <a href="{% url 'mostrarCurs' curs.id %}" class="btn btn-info">{{ curs.nom_curs_complert }}</a>
+    {% endfor %}
+
+{% endblock %}
+
+{% block extrahead %}
+<style>
+    .btn-info {
+        width: 100px;
+    }
+</style>
+{% endblock %}
+

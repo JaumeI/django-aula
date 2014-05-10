@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ head }}
+{% endblock %}
+
+{% block content  %}
+    <h1>Estas veient els alumnes del curs {{ curs.nom_curs_complert }}:</h1>
+    <div class="row">
+        <p class="col-lg-5">Selecciona el curs on moure els alumnes que passen de curs:</p>
+        <div class="col-lg-3">
+            <select name="curs_desti" class="form-control col-lg-3">
+                {% for curs in cursos %}
+                    <option>{{ curs.nom_curs_complert }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <div class="clearfix"></div>
+        {% for alumne in alumnes %}
+        <div class="row row-padded" style="{% if forloop.counter|divisibleby:2 %}background-color: #F0F0F0;{% endif %}">
+
+            <div class="col-lg-4 col-md-4 col-sm-3" style="line-height: 34px; vertical-align: middle;"> {{ alumne }}</div>
+            <div class=" col-lg-3 col-lg-offset-1 col-md-3 col-sm-4 col-xs-12">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default btnenviar active" id="label_id_form-0-estat_0"><input type="radio" class="rad radenviar" name="form-0-estat" value="enviar" id="rad_id_form-0-estat_0" checked />PASSA</label>
+                    <label class="btn btn-default btnanular" id="label_id_form-0-estat_1"><input type="radio" class="rad radanular" name="form-0-estat" value="anular" id="rad_id_form-0-estat_1"  />IGUAL</label>
+                    <label class="btn btn-default btnres " id="label_id_form-0-estat_2"><input type="radio" class="rad radres" name="form-0-estat" value="res" id="rad_id_form-0-estat_2"   />MARXA</label>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    <br/>
+        <a href="" class="btn btn-success">ENDAVANT</a>
+
+    </div>
+
+
+{% endblock %}
+
+{% block extrahead %}
+    <style>
+        .btn-info {
+            width: 100px;
+        }
+    </style>
+{% endblock %}
