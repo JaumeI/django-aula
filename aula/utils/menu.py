@@ -104,7 +104,7 @@ def calcula_menu( user , path ):
                ('tutoria', 'Tutoria', 'tutoria__actuacions__list', tu, None,
                   (
                       ("Actuacions", 'tutoria__actuacions__list', tu, None, None ),
-                      ("Justificar", 'tutoria__justificar__pre_justificar', tu, None, None ),                                      
+                      #("Justificar", 'tutoria__justificar__pre_justificar', tu, None, None ),
                       ("Cartes", 'tutoria__cartes_assistencia__gestio_cartes', tu, None, None ),                                      
                       ("Alumnes", 'tutoria__alumnes__list', tu, None, None ),
                       ("Assistència", 'tutoria__assistencia__list_entre_dates', tu, None, None ),                                      
@@ -139,6 +139,7 @@ def calcula_menu( user , path ):
                #--Coord.Alumnes--------------------------------------------------------------------------
                ('coordinacio_alumnes', 'Coord.Alumnes', 'coordinacio_alumnes__ranking__list', di, None,
                   (
+                      ("Justificar", 'coordinacio_alumnes__justificar__pre_justificar', di, None, None ),
                       ("Alertes Incidències", 'coordinacio_alumnes__ranking__list', di, None, None ),
                       ("Alertes Assistència", 'coordinacio_alumnes__assistencia_alertes__llistat', di, None, None ),
                       ("Cartes", 'coordinacio_alumnes__assistencia__cartes', di, None, None ),
@@ -146,6 +147,7 @@ def calcula_menu( user , path ):
                       ("Control Tramitació Expulsions", 'coordinacio_alumnes__explusions__control_tramitacio', di, None, None ),
                       ("Passa llista grup", 'coordinacio_alumnes__presencia__passa_llista_a_un_grup_tria', di, None, None ),
                       ("Impressió Massiva Faltes i Incidències", 'coordinacio_alumnes__alumne__informe_faltes_incidencies', di, None, None ),
+
                    )
                ),
 
@@ -187,6 +189,7 @@ def calcula_menu( user , path ):
                #--Consergeria--------------------------------------------------------------------------
                ('consergeria', 'Consergeria', 'consergeria__missatges__sms', co, None,
                   (
+                      ("Justificar", 'coordinacio_alumnes__justificar__pre_justificar', co, None, None ),
                       ("SMS", 'consergeria__missatges__sms', co, None, None ),
                       ("Missatge a tutors", 'consergeria__missatges__envia_tutors', co, None, None ),
 

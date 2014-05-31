@@ -181,20 +181,20 @@ class DateTimeTextImput(DateTimeInput):
                                 });
                             });
                         </script>"""
-        attrs.setdefault( 'class', "" ) 
+        attrs.setdefault('class', "")
         attrs['class'] += " form-control"        
-        attrs['data-format'] ="dd/MM/yyyy HH:mm"   
-        super_html = super( DateTimeTextImput, self ).render( name, value, attrs)
+        attrs['data-format'] = "dd/MM/yyyy HH:mm"
+        super_html = super(DateTimeTextImput, self).render( name, value, attrs)
         
-        return mark_safe(pre_html  + super_html +  post_html + javascript   )                                    
+        return mark_safe(pre_html + super_html + post_html + javascript)
 
     
 
 class DateTextImput(DateInput):
     def render(self, name, value, attrs={}):
         pre_html = """
-                         <div class='input-group date' id='datetime_{0}' style="width:300px;" >""".format( attrs['id'] )
-        post_html = """    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
+                         <div class='input-group date' id='datetime_{0}' style="width:300px;" >""".format(attrs['id'])
+        post_html = """    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                            </span>
                          </div>
                       """
@@ -207,12 +207,12 @@ class DateTextImput(DateInput):
                                 });
                             });
                         </script>"""
-        attrs.setdefault( 'class', "" ) 
+        attrs.setdefault('class', "")
         attrs['class'] += " form-control"
-        attrs['data-format'] ="dd/MM/yyyy"          
-        super_html = super( DateTextImput, self ).render( name, value, attrs)
+        attrs['data-format'] = "dd/MM/yyyy"
+        super_html = super(DateTextImput, self).render(name, value, attrs)
         
-        return mark_safe(pre_html  + super_html +  post_html + javascript   )
+        return mark_safe(pre_html + super_html + post_html + javascript)
 
 
 

@@ -10,6 +10,14 @@ urlpatterns = patterns('aula.apps.incidencies.views',
                        
     url(r'^posaExpulsio/$', 'posaExpulsio',
         name="aula__incidencies__posa_expulsio"),
+
+    #Mogut de tutoria a coordinacio alumnes
+    url(r'^justificaFaltesPre/$', 'justificaFaltesPre',
+        name="coordinacio_alumnes__justificar__pre_justificar"),
+    url(r'^justificaFaltes/(?P<pk>\d+)/(?P<year>\d{4})/(?P<month>\d+)/(?P<day>\d+)/$', 'justificaFaltes',
+        name="coordinacio_alumnes__justificar__by_pk_and_date"),
+
+
                        
     url(r'^posaExpulsioW2/(?P<pk>\d+)/$', 'posaExpulsioW2',
         name="aula__incidencies__posa_expulsio_w2"),

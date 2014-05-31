@@ -314,84 +314,84 @@ def esborraActuacio(request, pk):
             
     return HttpResponseRedirect( url_next )  
 
-@login_required
-@group_required(['professors'])
-def justificaFaltes(request, pk, year, month, day):
-    credentials = tools.getImpersonateUser(request) 
-    (user, l4) = credentials
-    professor = User2Professor(user)
-
-    formset = []    
-    head='Justificar faltes'
-    missatge = ''
-    
-    alumne = Alumne.objects.get( pk = int(pk) )
-    
-    #---seg-----
-    esAlumneTutorat = professor in alumne.tutorsDeLAlumne() 
-    te_permis = l4 or esAlumneTutorat
-    if  not te_permis:
-        raise Http404()     
-    
-    algunDeBe = False
-    
-    dia_impartir = date( year = int(year), month = int(month), day = int(day) )
-
-    ControlAssistenciaFormF = modelformset_factory(ControlAssistencia, fields=( 'estat',), extra = 0 )
- 
-    controls = ControlAssistencia.objects.filter(
-                            alumne = alumne,                            
-                            impartir__dia_impartir = dia_impartir                           
-                        ).order_by( 'alumne', '-impartir__dia_impartir', 'impartir__horari__hora'  )
-       
-    if request.method == 'POST':
-        
-        formCA=ControlAssistenciaFormF(request.POST, prefix='ca',queryset  = controls )
-
-        for form in formCA: 
-            control_a = form.instance
-            form.fields['estat'].label = u'{0} {1} {2}'.format( control_a.alumne, control_a.impartir.dia_impartir, control_a.impartir.horari.hora )
-            form.instance.credentials = credentials
-            if 'estat' in form._get_changed_data() and form.is_valid():
-                ca=form.save(commit=False)
-                ca.credentials = credentials
-                algunDeBe = True
-                ca=form.save()
-        
-        if algunDeBe:
-            missatge = u'Les faltes han estat justificades.' 
-            #LOGGING
-            Accio.objects.create( 
-                    tipus = 'JF',
-                    usuari = user,
-                    l4 = l4,
-                    impersonated_from = request.user if request.user != user else None,
-                    text = u"""Justificades faltes de l'alumne {0} del dia {1}. """.format( alumne, dia_impartir )
-                )                 
-        else: 
-            missatge = u'''No s'ha justificat cap falta.'''        
-        
-    else:    
-        controls = ControlAssistencia.objects.filter(
-                            alumne = alumne,                            
-                            impartir__dia_impartir = dia_impartir                          
-                        ).order_by( 'alumne', '-impartir__dia_impartir', 'impartir__horari__hora'  )
-                        
-        formCA=ControlAssistenciaFormF( prefix='ca',queryset  = controls )
-        
-        for form in formCA: 
-            control_a = form.instance
-            form.fields['estat'].label = u'{0} {1} {2}'.format( control_a.alumne, control_a.impartir.dia_impartir, control_a.impartir.horari.hora )
-
-
-        
-    return render_to_response(
-                  "formset.html", 
-                  {"formset": formCA,
-                   "head": head,
-                   "missatge": missatge,
-                   },
-                  context_instance=RequestContext(request))
+# @login_required
+# @group_required(['professors'])
+# def justificaFaltes(request, pk, year, month, day):
+#     credentials = tools.getImpersonateUser(request)
+#     (user, l4) = credentials
+#     professor = User2Professor(user)
+#
+#     formset = []
+#     head='Justificar faltes'
+#     missatge = ''
+#
+#     alumne = Alumne.objects.get( pk = int(pk) )
+#
+#     #---seg-----
+#     esAlumneTutorat = professor in alumne.tutorsDeLAlumne()
+#     te_permis = l4 or esAlumneTutorat
+#     if  not te_permis:
+#         raise Http404()
+#
+#     algunDeBe = False
+#
+#     dia_impartir = date( year = int(year), month = int(month), day = int(day) )
+#
+#     ControlAssistenciaFormF = modelformset_factory(ControlAssistencia, fields=( 'estat',), extra = 0 )
+#
+#     controls = ControlAssistencia.objects.filter(
+#                             alumne = alumne,
+#                             impartir__dia_impartir = dia_impartir
+#                         ).order_by( 'alumne', '-impartir__dia_impartir', 'impartir__horari__hora'  )
+#
+#     if request.method == 'POST':
+#
+#         formCA=ControlAssistenciaFormF(request.POST, prefix='ca',queryset  = controls )
+#
+#         for form in formCA:
+#             control_a = form.instance
+#             form.fields['estat'].label = u'{0} {1} {2}'.format( control_a.alumne, control_a.impartir.dia_impartir, control_a.impartir.horari.hora )
+#             form.instance.credentials = credentials
+#             if 'estat' in form._get_changed_data() and form.is_valid():
+#                 ca=form.save(commit=False)
+#                 ca.credentials = credentials
+#                 algunDeBe = True
+#                 ca=form.save()
+#
+#         if algunDeBe:
+#             missatge = u'Les faltes han estat justificades.'
+#             #LOGGING
+#             Accio.objects.create(
+#                     tipus = 'JF',
+#                     usuari = user,
+#                     l4 = l4,
+#                     impersonated_from = request.user if request.user != user else None,
+#                     text = u"""Justificades faltes de l'alumne {0} del dia {1}. """.format( alumne, dia_impartir )
+#                 )
+#         else:
+#             missatge = u'''No s'ha justificat cap falta.'''
+#
+#     else:
+#         controls = ControlAssistencia.objects.filter(
+#                             alumne = alumne,
+#                             impartir__dia_impartir = dia_impartir
+#                         ).order_by( 'alumne', '-impartir__dia_impartir', 'impartir__horari__hora'  )
+#
+#         formCA=ControlAssistenciaFormF( prefix='ca',queryset  = controls )
+#
+#         for form in formCA:
+#             control_a = form.instance
+#             form.fields['estat'].label = u'{0} {1} {2}'.format( control_a.alumne, control_a.impartir.dia_impartir, control_a.impartir.horari.hora )
+#
+#
+#
+#     return render_to_response(
+#                   "formset.html",
+#                   {"formset": formCA,
+#                    "head": head,
+#                    "missatge": missatge,
+#                    },
+#                   context_instance=RequestContext(request))
 
 @login_required
 @group_required(['professors'])
@@ -787,15 +787,15 @@ def justificaNext(request, pk):
 @login_required
 @group_required(['professors'])
 def justificador(request, year, month, day):
-    credentials = tools.getImpersonateUser(request) 
+    credentials = tools.getImpersonateUser(request)
     (user, l4) = credentials
     professor = User2Professor(user)
-        
+
     errorsTrobats = None
-    
+
     dades = justificadorMKTable(request, year, month, day)
 
-    #navegacio pel calencari:
+    #navegacio pel calendari:
     import datetime as t
 
     data = t.date(  int(year), int(month), int(day) )
@@ -805,62 +805,59 @@ def justificador(request, year, month, day):
            [ professor.username, '< avui >'    , t.date.today ],
            [ professor.username, 'setmana vinent >'  , data + t.timedelta( days = +7 ) ],
            [ professor.username, 'mes vinent >>'      , data + t.timedelta( days = +30 ) ],
-        ]        
-                                              
+        ]
+
     return render_to_response(
-              "justificator.html", 
+              "justificator.html",
               {"head": u'Justificar faltes de tutorats de {0}'.format( professor ),
                "dades": dades,
                "altres_moments": altres_moments
                },
               context_instance=RequestContext(request))
-    
-@login_required
-@group_required(['professors'])
-def justificaFaltesPre(request):
-    credentials = tools.getImpersonateUser(request) 
-    (user, l4) = credentials
-    professor = User2Professor(user)
-    
-    #prefixes:
-    #https://docs.djangoproject.com/en/dev/ref/forms/api/#prefixes-for-forms    
-    formset = []
-    
-    head='Justificar faltes'
 
-    #---------------------------------Passar llista -------------------------------
-
-    q_grups_tutorats = Q( grup__in =  [ t.grup for t in professor.tutor_set.all() ] )
-    q_alumnes_tutorats = Q( pk__in = [ti.alumne.pk for ti in professor.tutorindividualitzat_set.all() ]  )
-    query = Alumne.objects.filter( q_grups_tutorats | q_alumnes_tutorats )
-    
-    if request.method == "POST":
-
-        formPas1=justificaFaltesW1Form( request.POST, queryset = query )
-        if formPas1.is_valid():            
-            alumne = formPas1.cleaned_data['alumne']
-            dia_impartir = formPas1.cleaned_data['data']
-            if alumne:
-                url_next = '/tutoria/justificaFaltes/{0}/{1}/{2}/{3}'.format( alumne.pk, dia_impartir.year, dia_impartir.month, dia_impartir.day  )
-            else: 
-                url_next = '/tutoria/justificador/{0}/{1}/{2}'.format( dia_impartir.year, dia_impartir.month, dia_impartir.day  )
-            return HttpResponseRedirect( url_next )
-        else:
-            formset.append( formPas1 )
-    else:
-        form=justificaFaltesW1Form( queryset = query )
-        formset.append( form )
-            
-    return render_to_response(
-                  "formset.html", 
-                  {"formset": formset,
-                   "head": head,
-                   },
-                  context_instance=RequestContext(request))
-    
-    
-
-
+# @login_required
+# @group_required(['professors'])
+# def justificaFaltesPre(request):
+#     credentials = tools.getImpersonateUser(request)
+#     (user, l4) = credentials
+#     professor = User2Professor(user)
+#
+#     #prefixes:
+#     #https://docs.djangoproject.com/en/dev/ref/forms/api/#prefixes-for-forms
+#     formset = []
+#
+#     head='Justificar faltes'
+#
+#     #---------------------------------Passar llista -------------------------------
+#
+#     q_grups_tutorats = Q( grup__in =  [ t.grup for t in professor.tutor_set.all() ] )
+#     q_alumnes_tutorats = Q( pk__in = [ti.alumne.pk for ti in professor.tutorindividualitzat_set.all() ]  )
+#     query = Alumne.objects.filter( q_grups_tutorats | q_alumnes_tutorats )
+#
+#
+#     if request.method == "POST":
+#
+#         formPas1=justificaFaltesW1Form( request.POST, queryset = query )
+#         if formPas1.is_valid():
+#             alumne = formPas1.cleaned_data['alumne']
+#             dia_impartir = formPas1.cleaned_data['data']
+#             if alumne:
+#                 url_next = '/tutoria/justificaFaltes/{0}/{1}/{2}/{3}'.format(alumne.pk, dia_impartir.year, dia_impartir.month, dia_impartir.day  )
+#             else:
+#                 url_next = '/tutoria/justificador/{0}/{1}/{2}'.format(dia_impartir.year, dia_impartir.month, dia_impartir.day  )
+#             return HttpResponseRedirect( url_next )
+#         else:
+#             formset.append( formPas1 )
+#     else:
+#         form=justificaFaltesW1Form( queryset = query )
+#         formset.append(form)
+#
+#     return render_to_response(
+#                   "formset.html",
+#                   {"formset": formset,
+#                    "head": head,
+#                    },
+#                   context_instance=RequestContext(request))
 
 @login_required
 @group_required(['professors'])

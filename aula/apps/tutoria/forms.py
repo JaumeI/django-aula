@@ -29,15 +29,15 @@ class elsMeusAlumnesTutoratsEntreDatesForm( forms.Form ):
                 
 
 class justificaFaltesW1Form(forms.Form):
-    alumne = forms.ModelChoiceField( queryset= Alumne.objects.none(), 
-                                          required = False, 
+    alumne = forms.ModelChoiceField( queryset= Alumne.objects.none(),
+                                          required = False,
                                           empty_label="(Justificador)",
                                           help_text=u"""Alumne al que vols justificar faltes.(Justificador per tot el grup)"""  )
 
-    data = forms.DateField(label=u'Data faltes a justificar', 
+    data = forms.DateField(label=u'Data faltes a justificar',
                                        initial=datetime.date.today,
-                                       required = True, 
-                                       help_text=u'Data on hi ha les faltes a justificar.',  
+                                       required = True,
+                                       help_text=u'Data on hi ha les faltes a justificar.',
                                        widget = DateTextImput() )
 
     pas = forms.IntegerField(  initial=1, widget = forms.HiddenInput() )
@@ -45,7 +45,10 @@ class justificaFaltesW1Form(forms.Form):
     def __init__(self, *args, **kwargs):
         self.queryset = kwargs.pop('queryset', None)
         super(justificaFaltesW1Form,self).__init__(*args,**kwargs)
-        self.fields['alumne'].queryset = self.queryset        
+        self.fields['alumne'].queryset = self.queryset
+
+
+
         
 class informeSetmanalForm(forms.Form):
     grup = forms.ModelChoiceField( queryset= Grup.objects.none(), 

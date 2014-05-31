@@ -15,10 +15,11 @@ urlpatterns = patterns('aula.apps.tutoria.views',
                        
     url(r'^esborraActuacio/(?P<pk>\d+)/$', 'esborraActuacio',
         name="tutoria__actuacions__esborrat"),
-                       
-    url(r'^justificaFaltesPre/$', 'justificaFaltesPre',
-        name="tutoria__justificar__pre_justificar"),
-                       
+
+
+    #mogut de tutoria a coordinacio alumnes
+    #url(r'^justificaFaltesPre/$', 'justificaFaltesPre', name="tutoria__justificar__pre_justificar"),
+    #url(r'^justificaFaltes/(?P<pk>\d+)/(?P<year>\d{4})/(?P<month>\d+)/(?P<day>\d+)/$', 'justificaFaltes',name="tutoria__justificar__by_pk_and_date"),
     url(r'^elsMeusAlumnesTutorats/$', 'elsMeusAlumnesTutorats',
         name="tutoria__alumnes__list"),
                        
@@ -28,8 +29,7 @@ urlpatterns = patterns('aula.apps.tutoria.views',
     url(r'^detallTutoriaAlumne/(?P<pk>\d+)/(?P<detall>\w+)/$', 'detallTutoriaAlumne',
         name="tutoria__alumne__detall"),
                        
-    url(r'^justificaFaltes/(?P<pk>\d+)/(?P<year>\d{4})/(?P<month>\d+)/(?P<day>\d+)/$', 'justificaFaltes',
-        name="tutoria__justificar__by_pk_and_date"),
+
                        
     url(r'^informeSetmanal/$', 'informeSetmanal',
         name="tutoria__alumne__informe_setmanal"),

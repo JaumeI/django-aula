@@ -175,7 +175,7 @@ class alertaAssistenciaForm(forms.Form):
     tpc = forms.IntegerField( label = u'filtre %', 
                               max_value=100, 
                               min_value=1, initial = 25  ,
-                              help_text=u'''Filtra alumnes amb % de absència superior a aquet valor.''' ,
+                              help_text=u'''Filtra alumnes amb % de absència superior a aquest valor.''' ,
                               widget = TextInput(attrs={'class':"slider"} )  )
     
     nivell = forms.ModelChoiceField( 

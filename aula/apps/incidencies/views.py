@@ -47,7 +47,7 @@ from django.http import Http404
 from datetime import date, timedelta
 
 #helpers
-from django.forms.models import modelform_factory
+from django.forms.models import modelform_factory, modelformset_factory
 from aula.utils.decorators import group_required
 from aula.apps.horaris.models import FranjaHoraria
 from django.core.exceptions import ObjectDoesNotExist
@@ -1450,6 +1450,132 @@ def blanc( request ):
                     context_instance=RequestContext(request)) 
 
 
+
+@login_required
+@group_required(['consergeria', 'direcció'])
+def justificaFaltesPre(request):
+    from aula.apps.incidencies.forms import justificaFaltesW1Form
+    #
+    # Falta fer que pugui entrar el conserge!!!
+    # Ara dona error 404
+    #
+    credentials = tools.getImpersonateUser(request)
+    (user, l4) = credentials
+    #professor = User2Professor(user)
+
+    #prefixes:
+    #https://docs.djangoproject.com/en/dev/ref/forms/api/#prefixes-for-forms
+    formset = []
+
+    head='Justificar faltes'
+
+
+    query = Alumne.objects.all().order_by("cognoms")
+
+    if request.method == "POST":
+
+        formPas1=justificaFaltesW1Form( request.POST, queryset = query )
+        if formPas1.is_valid():
+            alumne = formPas1.cleaned_data['alumne']
+            dia_impartir = formPas1.cleaned_data['data']
+            if alumne:
+                url_next = '/incidencies/justificaFaltes/{0}/{1}/{2}/{3}'.format(alumne.pk, dia_impartir.year, dia_impartir.month, dia_impartir.day  )
+            else:
+                url_next = '/incidencies/justificador/{0}/{1}/{2}'.format(dia_impartir.year, dia_impartir.month, dia_impartir.day  )
+            return HttpResponseRedirect( url_next )
+        else:
+            formset.append( formPas1 )
+    else:
+        form=justificaFaltesW1Form( queryset = query )
+        formset.append(form)
+
+    return render_to_response(
+                  "formset.html",
+                  {"formset": formset,
+                   "head": head,
+                   },
+                  context_instance=RequestContext(request))
+
+@login_required
+@group_required(['consergeria', 'direcció'])
+def justificaFaltes(request, pk, year, month, day):
+    credentials = tools.getImpersonateUser(request)
+    (user, l4) = credentials
+    professor = User2Professor(user)
+
+    formset = []
+    head='Justificar faltes'
+    missatge = ''
+
+    alumne = Alumne.objects.get( pk = int(pk) )
+
+    #---seg-----
+    #esAlumneTutorat = professor in alumne.tutorsDeLAlumne()
+    #te_permis = l4 or esAlumneTutorat
+    #if  not te_permis:
+     #   raise Http404()
+
+    algunDeBe = False
+
+    dia_impartir = date( year = int(year), month = int(month), day = int(day) )
+
+    ControlAssistenciaFormF = modelformset_factory(ControlAssistencia, fields=( 'estat',), extra = 0 )
+
+    controls = ControlAssistencia.objects.filter(
+                            alumne = alumne,
+                            impartir__dia_impartir = dia_impartir
+                        ).order_by( 'alumne', '-impartir__dia_impartir', 'impartir__horari__hora'  )
+
+    if request.method == 'POST':
+
+        formCA=ControlAssistenciaFormF(request.POST, prefix='ca',queryset  = controls )
+
+        for form in formCA:
+            print "estic en un form"
+            control_a = form.instance
+            form.fields['estat'].label = u'{0} {1} {2}'.format( control_a.alumne, control_a.impartir.dia_impartir, control_a.impartir.horari.hora )
+            form.instance.credentials = credentials
+            if 'estat' in form._get_changed_data() and form.is_valid():
+                print "paco porrasss"
+                ca=form.save(commit=False)
+                ca.credentials = credentials
+                algunDeBe = True
+                ca=form.save()
+
+        if algunDeBe:
+            missatge = u'Les faltes han estat justificades.'
+            #LOGGING
+            Accio.objects.create(
+                    tipus = 'JF',
+                    usuari = user,
+                    l4 = l4,
+                    impersonated_from = request.user if request.user != user else None,
+                    text = u"""Justificades faltes de l'alumne {0} del dia {1}. """.format( alumne, dia_impartir )
+                )
+        else:
+            missatge = u'''No s'ha justificat cap falta.'''
+
+    else:
+        controls = ControlAssistencia.objects.filter(
+                            alumne = alumne,
+                            impartir__dia_impartir = dia_impartir
+                        ).order_by( 'alumne', '-impartir__dia_impartir', 'impartir__horari__hora'  )
+
+        formCA=ControlAssistenciaFormF( prefix='ca',queryset  = controls )
+
+        for form in formCA:
+            control_a = form.instance
+            form.fields['estat'].label = u'{0} {1} {2}'.format( control_a.alumne, control_a.impartir.dia_impartir, control_a.impartir.horari.hora )
+
+
+
+    return render_to_response(
+                  "formset.html",
+                  {"formset": formCA,
+                   "head": head,
+                   "missatge": missatge,
+                   },
+                  context_instance=RequestContext(request))
 
 
 

@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 from django import forms as forms
+from aula.apps.alumnes.models import Alumne
 
 from aula.apps.incidencies.models import FrassesIncidenciaAula, Expulsio
 from aula.utils.widgets import DateTextImput
@@ -66,7 +67,34 @@ class posaIncidenciaAulaForm(forms.Form):
         self.fields['alumnes'].label = self.etiqueta 
         self.fields['alumnes'].queryset = self.queryset
     
-    
+
+
+class justificaFaltesW1Form(forms.Form):
+    import datetime
+    alumne = forms.ModelChoiceField( queryset= Alumne.objects.none(),
+                                          required = False,
+                                          empty_label="(Justificador)",
+                                          help_text=u"""Alumne al que vols justificar faltes.(Justificador per tot el grup)"""  )
+
+    data = forms.DateField(label=u'Data faltes a justificar',
+                                       initial=datetime.date.today,
+                                       required = True,
+                                       help_text=u'Data on hi ha les faltes a justificar.',
+                                       widget = DateTextImput() )
+
+    pas = forms.IntegerField(  initial=1, widget = forms.HiddenInput() )
+
+    def __init__(self, *args, **kwargs):
+        self.queryset = kwargs.pop('queryset', None)
+        super(justificaFaltesW1Form,self).__init__(*args,**kwargs)
+        self.fields['alumne'].queryset = self.queryset
+
+
+
+
+
+
+
     
 #-------------------------------------------------------------------------------------------------------------
 

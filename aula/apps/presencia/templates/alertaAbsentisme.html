@@ -2,14 +2,12 @@
 
 {% block extrahead %} 
 
-
+{#
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 <script type="text/javascript">
-	$(function() {
+	$(document).ready(function()  {
 		$( "#id_tpc" ).parent().append('<div id="slider-range-max"></div>');
-	});
-
-	$(function() {
-		$( "#slider-range-max" ).slider({
+        $( "#slider-range-max" ).slider({
 			range: "max",
 			min: 1,
 			max: 100,
@@ -23,5 +21,6 @@
 
 </script>
 
+#}
 {% endblock %}
 
