@@ -17,8 +17,8 @@ urlpatterns = patterns('',
     (r'^extKronowin/', include('aula.apps.extKronowin.urls')),
     (r'^extSaga/', include('aula.apps.extSaga.urls')),
 
-    url(r'^promocions/(?P<curs>\d+)/$', 'aula.apps.promocions.views.mostraCurs', name = 'mostrarCurs'),
-    url(r'^promocions/', 'aula.apps.promocions.views.llistaCursos', name = 'administracio__promocions__llista'),
+    url(r'^promocions/(?P<grup>\d+)/$', 'aula.apps.promocions.views.mostraGrup', name = 'administracio__promocions__grups'),
+    url(r'^promocions/', 'aula.apps.promocions.views.llistaGrups', name = 'administracio__promocions__llista'),
 
 
     url(r'^sms/', 'aula.apps.extSMS.views.llistaSMS', name = 'consergeria__missatges__sms'),

@@ -10,10 +10,8 @@ from aula.apps.alumnes.models import Alumne
 from datetime import timedelta, datetime
 
 def calcula_menu( user , path ):
-    
     if not user.is_authenticated():
         return
-
     #mire a quins grups està aquest usuari:
     al = Group.objects.get_or_create(name= 'alumne' )[0] in user.groups.all()
     di = not al and Group.objects.get_or_create(name= 'direcció' )[0] in user.groups.all()
@@ -23,7 +21,6 @@ def calcula_menu( user , path ):
     pg = not al and Group.objects.get_or_create(name= 'psicopedagog' )[0] in user.groups.all()
     tu = not al and pr and ( User2Professor( user).tutor_set.exists() or User2Professor( user).tutorindividualitzat_set.exists() )    
     tots = di or pr or pl or co or al or pg
-    
     #Comprovar si té missatges sense llegir
     nMissatges = user.destinatari_set.filter( moment_lectura__isnull = True ).count()
     fa2segons = datetime.now() - timedelta( seconds = 2 )
@@ -294,6 +291,7 @@ administracio__sincronitza__fusiona
 administracio__sincronitza__kronowin
 administracio__sincronitza__regenerar_horaris
 administracio__sincronitza__saga
+administracio__promocions__llista
 
 coordinacio_pedagogica__qualitativa__avaluacions
 coordinacio_pedagogica__qualitativa__items

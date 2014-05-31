@@ -5,7 +5,6 @@ from django.forms.models import modelformset_factory
 from django.template import RequestContext
 from django.db.models import Q
 import subprocess
-import time
 from aula.utils.tools import getImpersonateUser
 from models import SMS
 from forms import smsForm
