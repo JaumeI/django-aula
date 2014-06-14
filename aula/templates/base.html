@@ -35,10 +35,14 @@ $.fn.bootstrapDP = null;
 
 </head>
 
-<body {%if l4%}style="background-color:#FF0000;"{%endif%}>
+<body>
 
   <div class="container"> 
-
+    {%if l4%}
+        <div class="alert alert-danger center-block text-center">
+         ULL: Estàs en mode L4!
+        </div>
+    {%endif%}
 	{% if messages %}
 	<ul class="messages">
 	{% for message in messages %}
@@ -54,7 +58,14 @@ $.fn.bootstrapDP = null;
 
 
     {% endblock %}
-  
+
+    {%if l4%}
+    <div class="clearfix"></div>
+    <br/>
+        <div class="alert alert-danger center-block text-center">
+         ULL: Estàs en mode L4!
+        </div>
+    {%endif%}
   </div> <!--container-->
 
 <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>

@@ -82,7 +82,8 @@ def posaIncidenciaAula(request, pk):           #pk = pk_impartir
             
             alumnes_amb_incidencia = form.cleaned_data['alumnes']
             frases_de_la_bdd = form.cleaned_data['frases']
-            frase_manual = form.cleaned_data['frase']
+            #frase_manual = form.cleaned_data['frase']
+            frase_manual = ""
             es_informativa = form.cleaned_data['es_informativa']
             totes_les_frases = [ frase.frase for frase in frases_de_la_bdd ] + ( [ frase_manual ] if frase_manual else []    )
             

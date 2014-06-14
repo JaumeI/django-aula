@@ -77,6 +77,10 @@ def controlAssistencia_clean( instance ):
         if instance.professor: professors_habilitats.append( instance.professor.pk )
         if instance.impartir.horari.professor: professors_habilitats.append( instance.impartir.horari.professor.pk )
         if instance.impartir.professor_guardia: professors_habilitats.append( instance.impartir.professor_guardia.pk )
+
+        #TODO: Falta mirar aixo
+        # Si es direcció o consergeria OK
+        # else ko
         if user.pk not in professors_habilitats:
             errors.setdefault(NON_FIELD_ERRORS, []).append( u'''Només el professor de l'assignatura, 
                                             el professor de guardia que ha passat llista o el tutor poden variar una assistència. 

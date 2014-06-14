@@ -68,8 +68,8 @@ def Incidencia_pre_delete(sender, instance, **kwargs):
     if l4:
         return
     
-    if instance.dia_incidencia < ( dt.date.today() + dt.timedelta( days = -7) ):
-        errors[NON_FIELD_ERRORS] = [u'''Aquesta incidència és massa antiga per ser esborrada (Té més d' una setmana)''']
+    if instance.dia_incidencia < ( dt.date.today() + dt.timedelta( days = -2) ):
+        errors[NON_FIELD_ERRORS] = [u'''Aquesta incidència és massa antiga per ser esborrada (Té més de dos dies)''']
         
     #PRECONDICIO: Només el professor que ha posat la falta o l'equip directiu la pot treure.
     if user and instance.professional.getUser().pk != user.pk:

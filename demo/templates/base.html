@@ -42,10 +42,14 @@ $.fn.bootstrapDP = null;
 
 </head>
 
-<body {%if l4%}style="background-color:#FF0000;"{%endif%}>
+<body>
 
   <div class="container"> 
-
+    {%if l4%}
+        <div class="alert alert-danger center-block text-center">
+         ULL: Estàs en mode L4!
+        </div>
+    {%endif%}
 	{% if messages %}
 	<ul class="messages">
 	{% for message in messages %}
@@ -61,7 +65,13 @@ $.fn.bootstrapDP = null;
 
 
     {% endblock %}
-
+{%if l4%}
+    <div class="clearfix"></div>
+    <br/>
+        <div class="alert alert-danger center-block text-center">
+         ULL: Estàs en mode L4!
+        </div>
+    {%endif%}
   {% if user.is_authenticated %}  
   <div class="row">
   	<a class="btn btn-warning btn-large" style="margin-top:10px; width: 100%;" data-toggle="modal" href="/logout">Aquesta és la web demo de -djAu-</a>

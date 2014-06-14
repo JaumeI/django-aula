@@ -520,8 +520,9 @@ def afegeixAlumnesLlista(request, pk):
     #seg-------------------------------
     pertany_al_professor = user.pk in [ impartir.horari.professor.pk,   \
                                         impartir.professor_guardia.pk if impartir.professor_guardia else -1 ]
-    if not ( l4 or pertany_al_professor):
-        raise Http404() 
+    #if not ( l4 or pertany_al_professor):
+    if not (l4):
+        return render_to_response("no-access.html", context_instance=RequestContext(request))
         
     alumnes_pk = [ ca.alumne.pk for ca in impartir.controlassistencia_set.all()]
     #http://www.ibm.com/developerworks/opensource/library/os-django-models/index.html?S_TACT=105AGX44&S_CMP=EDU
@@ -633,8 +634,10 @@ def treuAlumnesLlista(request, pk):
     #seg-------------------------------
     pertany_al_professor = user.pk in [ impartir.horari.professor.pk,   \
                                        impartir.professor_guardia.pk if impartir.professor_guardia else -1]
-    if not ( l4 or pertany_al_professor):
-        raise Http404() 
+    #if not ( l4 or pertany_al_professor):
+    if not (l4):
+        return render_to_response("no-access.html", context_instance=RequestContext(request))
+
     
 
     formset = []

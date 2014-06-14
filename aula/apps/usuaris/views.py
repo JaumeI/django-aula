@@ -126,7 +126,7 @@ def impersonacio(request):
     else:
         form = triaUsuariForm()
         
-        formckbx = ckbxForm( label = u'Accés de nivell 4(UAT)', 
+        formckbx = ckbxForm( label = u'Accés de nivell 4(UAT)',
                              help_text=u'''Marca aquesta cassella per realitzar les operacions
                                          sense les restriccions habituals''' )
         formckbx.fields['ckbx' ].initial = request.session.has_key('l4') and request.session['l4'] 

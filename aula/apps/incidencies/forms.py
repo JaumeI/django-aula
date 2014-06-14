@@ -48,12 +48,12 @@ class posaIncidenciaAulaForm(forms.Form):
                                               clic amb el ratolí."""  )
 
     
-    frase = forms.CharField( label=u'o bé escriu incidència', max_length = 100, required=False,
-                             help_text=u"""Pots escriure tu mateix la frase de la incidència en cas que no aparegui a les 
-                                         frases predefinides. 
-                                        Aquesta informació la veuen els pares i els professors que imparteixen docència a aquest alumne.
-                                        Atenció: Pots escriure i triar frase a la vegada: es crearan dues incidències.
-                                        """  )
+    #frase = forms.CharField( label=u'o bé escriu incidència', max_length = 100, required=False,
+    #                         help_text=u"""Pots escriure tu mateix la frase de la incidència en cas que no aparegui a les
+    #                                     frases predefinides.
+    #                                    Aquesta informació la veuen els pares i els professors que imparteixen docència a aquest alumne.
+    #                                    Atenció: Pots escriure i triar frase a la vegada: es crearan dues incidències.
+    #                                    """  )
  
     es_informativa = forms.BooleanField( required = False,  
                                          help_text=u"""Indica si aquesta incidència és purament informativa. 
