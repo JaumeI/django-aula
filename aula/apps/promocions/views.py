@@ -5,7 +5,7 @@ from django.forms.models import modelformset_factory
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from aula.apps.alumnes.models import Alumne, Grup
-from aula.apps.promocions.forms import promoForm
+from aula.apps.promocions.forms import promoForm, newAlumne
 from aula.utils.decorators import group_required
 
 
@@ -15,11 +15,20 @@ def llistaGrups(request):
     grups = Grup.objects.all().order_by("descripcio_grup")
     return render_to_response('mostraGrups.html', {"grups" : grups}, context_instance=RequestContext(request))
 
+@login_required
+@group_required(['direccio'])
+def nouAlumne(request):
+    #Aqui va el tractament del formulari i tota la polla...
+
+    if request.method == 'POST':
+        # Ve per post, he de guardar l'alumne si les dades estan correctes
+        pass
+    form = newAlumne()
+    return render_to_response('mostraFormulari.html', {'form': form}, context_instance=RequestContext(request))
 
 @login_required
 @group_required(['direccio'])
 def mostraGrup(request, grup=""):
-
     PromoFormset = modelformset_factory(Alumne, form=promoForm, extra = 0)
     if request.method == 'POST':
         curs_vinent = request.POST.get('curs_desti')
@@ -29,11 +38,11 @@ def mostraGrup(request, grup=""):
 
                 decisio = form.cleaned_data['decisio']
                 if (decisio == "2"):
-                    print "L'he de borrar"
+
                     id =  form.cleaned_data['id'].id
                     Alumne.objects.get(id=id).delete()
                 if (decisio == "0"):
-                    print "El passo de curs"
+
                     id = form.cleaned_data['id'].id
                     alumne = Alumne.objects.get(id = id)
                     alumne.grup_id = curs_vinent

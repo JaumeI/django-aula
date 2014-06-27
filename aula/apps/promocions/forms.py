@@ -16,3 +16,8 @@ class promoForm(ModelForm):
     class Meta:
         model = Alumne
         fields  = []
+
+class newAlumne(ModelForm):
+    class Meta:
+        model = Alumne
+        fields = ['grup', 'nom', 'cognoms', 'data_neixement', 'correu_tutors', 'correu_relacio_familia_pare', 'correu_relacio_familia_mare', 'tutors_volen_rebre_correu', 'centre_de_procedencia', 'localitat', 'telefons', 'tutors', 'adreca']

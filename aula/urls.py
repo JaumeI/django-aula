@@ -18,8 +18,8 @@ urlpatterns = patterns('',
     (r'^extSaga/', include('aula.apps.extSaga.urls')),
 
     url(r'^promocions/(?P<grup>\d+)/$', 'aula.apps.promocions.views.mostraGrup', name = 'administracio__promocions__grups'),
+    url(r'^promocions/nou-alumne', 'aula.apps.promocions.views.nouAlumne', name = 'administracio__promocions__noualumne'),
     url(r'^promocions/', 'aula.apps.promocions.views.llistaGrups', name = 'administracio__promocions__llista'),
-
 
     url(r'^sms/', 'aula.apps.extSMS.views.llistaSMS', name = 'consergeria__missatges__sms'),
     url(r'^enviar_prova/', 'aula.apps.extSMS.views.enviaSMS', name = 'consergeria__missatges__enviasms'),
