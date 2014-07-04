@@ -29,6 +29,8 @@ def nouAlumne(request):
 @login_required
 @group_required(['direccio'])
 def mostraGrup(request, grup=""):
+
+    from datetime import date
     PromoFormset = modelformset_factory(Alumne, form=promoForm, extra = 0)
     if request.method == 'POST':
         curs_vinent = request.POST.get('curs_desti')
@@ -40,7 +42,13 @@ def mostraGrup(request, grup=""):
                 if (decisio == "2"):
 
                     id =  form.cleaned_data['id'].id
-                    Alumne.objects.get(id=id).delete()
+                    alumne = Alumne.objects.get(id=id)
+                    alumne.data_baixa = date.today()
+                    alumne.estat_sincronitzacio = 'DEL'
+                    alumne.motiu_bloqueig = 'Baixa'
+                    alumne.save()
+
+
                 if (decisio == "0"):
 
                     id = form.cleaned_data['id'].id
@@ -55,6 +63,10 @@ def mostraGrup(request, grup=""):
     grup_actual = Grup.objects.get(id=grup)
 
     alumnes = Alumne.objects.filter(grup__in=grup, data_baixa__isnull = True ).order_by("cognoms")
+    if (len(alumnes) == 0):
+        msg = "Aquest grup no te alumnes actualment."
+        return render_to_response('mostraGrups.html', {"grups" : grups, "msg": msg}, context_instance=RequestContext(request))
+
     formset = PromoFormset(queryset=alumnes)
 
     return render_to_response('mostraGrup.html', {"grup_actual" : grup_actual, "formset" : formset, "grups":grups}, context_instance=RequestContext(request))

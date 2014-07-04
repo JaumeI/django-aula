@@ -53,7 +53,7 @@ class justificaFaltesW1Form(forms.Form):
 class informeSetmanalForm(forms.Form):
     grup = forms.ModelChoiceField( queryset= Grup.objects.none(), 
                                           required = False, 
-                                          empty_label="-- Tots els alumnes --",
+                                          empty_label="-- Selecciona un grup --",
                                           help_text=u"""Tria un grup per fer l'informe."""  )
 
     data = forms.DateField(label=u'Setmana informe:', 

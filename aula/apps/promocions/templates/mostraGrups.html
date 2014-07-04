@@ -4,6 +4,9 @@
 {% endblock %}
 
 {% block content  %}
+    {% if msg %}
+    <h2 class="alert alert-danger">{{ msg }}</h2>
+    {% endif %}
     <h1>Tria el grup que vols promocionar:</h1>
     <h3 class="alert alert-danger">Recorda que primer cal passar els alumnes dels cursos superiors.</h3>
     </select>

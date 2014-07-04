@@ -3,6 +3,6 @@
 
 from common import *
 
-DEBUG = False
+DEBUG = True
 
 

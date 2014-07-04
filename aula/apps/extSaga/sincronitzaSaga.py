@@ -23,7 +23,7 @@ def sincronitza(f, user = None):
     
     errors = []
         
-    Alumne.objects.exclude( estat_sincronitzacio__exact = 'DEL' ).update( estat_sincronitzacio = 'PRC')
+    #Alumne.objects.exclude( estat_sincronitzacio__exact = 'DEL' ).update( estat_sincronitzacio = 'PRC')
         #,"00_NOM","01_ADRE�A","02_CP","03_CENTRE PROCED�NCIA","04_CODI LOCALITAT","05_CORREU ELECTR�NIC","06_DATA NAIXEMENT","07_DOC. IDENTITAT","08_GRUPSCLASSE","09_NOM LOCALITAT","10_TEL�FONS","11_TUTOR(S)"
     reader = csv.DictReader(f)
     errors_nAlumnesSenseGrup=0
