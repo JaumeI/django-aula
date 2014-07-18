@@ -61,9 +61,9 @@ def mostraGrup(request, grup=""):
 
     grups = Grup.objects.all().order_by("descripcio_grup")
     grup_actual = Grup.objects.get(id=grup)
-
-    alumnes = Alumne.objects.filter(grup__in=grup, data_baixa__isnull = True ).order_by("cognoms")
+    alumnes = Alumne.objects.filter(grup=grup, data_baixa__isnull = True ).order_by("cognoms")
     if (len(alumnes) == 0):
+
         msg = "Aquest grup no te alumnes actualment."
         return render_to_response('mostraGrups.html', {"grups" : grups, "msg": msg}, context_instance=RequestContext(request))
 
