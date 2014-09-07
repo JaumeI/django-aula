@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ head }}
+{% endblock %}
+
+{% block content  %}
+    {% if msg %}
+    <h2 class="alert alert-danger">{{ msg }}</h2>
+    {% endif %}
+    <h1>Tria el grup d'alumnes que vols gestionar els telefons:</h1>
+    {% for grup in grups %}
+        <a href="{% url 'consergeria__missatges__gentelefons' grup.id %}" class="btn btn-info">{{ grup.descripcio_grup }}</a>
+    {% endfor %}
+
+{% endblock %}
+
+{% block extrahead %}
+<style>
+    .btn-info {
+        width: 100px;
+    }
+</style>
+{% endblock %}
+

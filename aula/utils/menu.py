@@ -193,6 +193,7 @@ def calcula_menu( user , path ):
                       ("Justificar", 'coordinacio_alumnes__justificar__pre_justificar', co, None, None ),
                       ("SMS", 'consergeria__missatges__sms', co, None, None ),
                       ("Missatge a tutors", 'consergeria__missatges__envia_tutors', co, None, None ),
+                      ("Telèfons Alumnes", 'consergeria__missatges__telefons', co, None, None ),
 
                    )
                ),

@@ -37,9 +37,9 @@ class FaltaSMS(models.Model):
     def __unicode__(self):
         return str(self.sms.alumne) + " " + str(self.sms.dia) + " " + str(self.hora)
 
-class TelefonSMS(models.Model):
+class TelefonTutors(models.Model):
     telefon = models.CharField(max_length=120)
-    sms = models.ForeignKey(SMS)
+    alumne = models.ForeignKey(Alumne) # <- 2.0
 
     def __unicode__(self):
         return self.telefon

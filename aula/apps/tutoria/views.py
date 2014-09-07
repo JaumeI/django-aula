@@ -601,9 +601,20 @@ def informeSetmanal(request):
         form = informeSetmanalForm( data = request.POST, queryset = grups )
         if form.is_valid():
             grup = form.cleaned_data['grup']
-            data = form.cleaned_data['data']
-            url_next = '/tutoria/informeSetmanalPrint/{0}/{1}/{2}/{3}/{4}'.format( grup.pk if grup else 'all', data.year, data.month, data.day,'html' )
-            return HttpResponseRedirect(  url_next)
+            if grup is not None:
+                data = form.cleaned_data['data']
+                url_next = '/tutoria/informeSetmanalPrint/{0}/{1}/{2}/{3}/{4}'.format( grup.pk if grup else 'all', data.year, data.month, data.day,'html' )
+                return HttpResponseRedirect(  url_next)
+            else:
+                msg = u"No has escollit un grup vàlid."
+                url_next = 'javascript:window.close();'
+                resultat = { 'errors': [ msg ],
+                        'warnings':  [], 'infos':  [], 'url_next': url_next }
+                return render_to_response(
+                           'resultat.html',
+                           {'head': u'Error preparant el llistat:' ,
+                            'msgs': resultat },
+                           context_instance=RequestContext(request))
         else:
             msg = u"Comprova que has seleccionat correctament el grup i la data."
             url_next = 'javascript:window.close();'
@@ -615,10 +626,7 @@ def informeSetmanal(request):
                         'msgs': resultat },
                        context_instance=RequestContext(request))    
 
-
     else:
-        
-
         grupInicial = { 'grup': grups[0]} if grups else {}
         if not grups and professor.tutorindividualitzat_set.count()  == 0:
             return render_to_response(
@@ -628,10 +636,10 @@ def informeSetmanal(request):
                         context_instance=RequestContext(request)) 
         
         form = informeSetmanalForm(  queryset = grups, initial = grupInicial )
-        
-        
+
+
     return render_to_response(
-                  "form.html", 
+                  "form.html",
                   {"form": form,
                    "head": head,
                    "target":"blank_"
@@ -1683,6 +1691,7 @@ def informeCompletFaltesIncidencies(request):
         if totBe and dataInici and dataFi:            
             import reports 
             return reports.reportFaltesIncidencies(dataInici, dataFi, alumnes_informe, alumnes_recordatori, grups, request)
+    #--------FINS AQUÍ--------
     else:
 
         form = dataForm( request.POST, prefix = 'data_ini' , label = u'Data des de', help_text = u'Primer dia a incloure al llistat' )       
@@ -1694,10 +1703,10 @@ def informeCompletFaltesIncidencies(request):
         for grup in Grup.objects.filter( alumne__isnull = False ).distinct():
             #http://www.ibm.com/developerworks/opensource/library/os-django-models/index.html?S_TACT=105AGX44&S_CMP=EDU
             formInclouGrup=ckbxForm(
-                                    prefix=str( grup.pk ),
-                                    label = u'Incloure {0}'.format(grup),
-                                    help_text = u"Marca aquesta casella per incloure al llistat els alumnes d'aquest grup"                          
-                                     )
+                prefix=str( grup.pk ),
+                label = u'Incloure {0}'.format(grup),
+                help_text = u"Marca aquesta casella per incloure al llistat els alumnes d'aquest grup"
+                 )
             formInclouGrup.formSetDelimited = True
             formset.append( formInclouGrup )
             for alumne in grup.alumne_set.all():

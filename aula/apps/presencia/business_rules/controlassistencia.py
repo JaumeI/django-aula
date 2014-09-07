@@ -137,11 +137,13 @@ def controlAssistencia_post_save(sender, instance, created, **kwargs):
 
 
 
+    # DAVID -- TODO -- 2.0 -- Ja no es creen telefons
+
     try:
         #Els SMS estàn activats
         SMS = get_model('extSMS', 'SMS')
         FaltaSMS = get_model('extSMS', 'FaltaSMS')
-        TelefonSMS = get_model('extSMS', 'TelefonSMS')
+        #TelefonSMS = get_model('extSMS', 'TelefonSMS')
 
         sms = SMS.objects.filter(alumne = instance.alumne, dia = instance.impartir.dia_impartir)
         hora = instance.impartir.horari.hora
@@ -153,13 +155,13 @@ def controlAssistencia_post_save(sender, instance, created, **kwargs):
                                       dia = instance.impartir.dia_impartir)
                 sms.save()
                 # regex = re.compile("\d{9}\d*")
-                telefons = re.findall("\d{9}\d*", instance.alumne.telefons)
+                #telefons = re.findall("\d{9}\d*", instance.alumne.telefons)
 
-                for telefon in telefons:
-                    tel = telefon[-9:]
-                    if tel[0] == '6' or tel[0] == '7':
-                        print tel
-                        TelefonSMS.objects.create(telefon = tel, sms = sms)
+                # for telefon in telefons:
+                #     tel = telefon[-9:]
+                #     if tel[0] == '6' or tel[0] == '7':
+                #         print tel
+                #         TelefonSMS.objects.create(telefon = tel, sms = sms)
             else:
                 sms = sms[0]
 

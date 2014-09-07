@@ -34,6 +34,7 @@ def mostraGrup(request, grup=""):
     PromoFormset = modelformset_factory(Alumne, form=promoForm, extra = 0)
     if request.method == 'POST':
         curs_vinent = request.POST.get('curs_desti')
+        print request.POST
         formset = PromoFormset(request.POST)
         for form in formset.forms:
             if form.is_valid():

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load set_var %}
+{% block head %}
+  {{ head }}
+
+{% endblock %}
+
+{% block content  %}
+    <h2>Estàs editant els telèfons dels alumnes del grup {{ grup.descripcio_grup }}</h2>
+    <br>
+{% if formset %}
+    <form action="" class="inline-form" method="POST">{% csrf_token %}
+        {{ formset.management_form }}
+{% for form in formset %}
+    {{ form.id }}
+    <div class="row">
+    <div class="col-lg-4">{{ form.instance.nom }} {{ form.instance.cognoms }}</div>
+    <div class="col-lg-4">
+    {% for field in form.visible_fields %}{{ field }}{% endfor %}
+    </div>
+    </div>
+    <hr/>
+
+{% endfor %}
+    <button class="btn btn-lg btn-info">ENVIA</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -5,6 +5,7 @@ from django import forms as forms
 import datetime
 from aula.apps.alumnes.models import Alumne, Grup
 from django.forms.widgets import Widget
+from aula.utils.widgets import bootStrapButtonSelect
 
 class elsMeusAlumnesTutoratsEntreDatesForm( forms.Form ):
     grup = forms.ChoiceField(   )
@@ -51,10 +52,11 @@ class justificaFaltesW1Form(forms.Form):
 
         
 class informeSetmanalForm(forms.Form):
-    grup = forms.ModelChoiceField( queryset= Grup.objects.none(), 
-                                          required = False, 
-                                          empty_label="-- Selecciona un grup --",
-                                          help_text=u"""Tria un grup per fer l'informe."""  )
+    grup = forms.ModelChoiceField( queryset= Grup.objects.none(),
+                                          required = False,
+                                          #empty_label="-- Selecciona un grup --",
+                                          help_text=u"""Tria un grup per fer l'informe.""",  )
+
 
     data = forms.DateField(label=u'Setmana informe:', 
                                        initial=datetime.date.today,
@@ -66,9 +68,11 @@ class informeSetmanalForm(forms.Form):
         self.queryset = kwargs.pop('queryset', None)
         super(informeSetmanalForm,self).__init__(*args,**kwargs)
         self.fields['grup'].queryset = self.queryset
-        
+
 class seguimentTutorialForm(forms.Form):
+
     pregunta_oberta  = forms.CharField(  )
+
     pregunta_select  = forms.ChoiceField(  widget = forms.RadioSelect  )
 
     def __init__(self, *args, **kwargs):

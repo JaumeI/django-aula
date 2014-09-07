@@ -163,6 +163,57 @@ class bootStrapButtonSelect(Widget):
         return u'\n'.join(output)
     
 
+#------------------------------------------------------------------------
+
+class bootStrapButtonSelectMultiple(Widget):
+    allow_multiple_selected = True
+
+    def render(self, name, value, attrs=None, choices=()):
+        id_ = attrs['id']
+        num_id = 0
+        if value is None: value = ''
+        output = ['<div class="btn-group" data-toggle="buttons">']
+        options = self.render_buttons(choices, name, id_, num_id, [value])
+        if options:
+            output.append(options)
+        output.append(u'</div>')
+        return mark_safe(u'\n'.join(output))
+
+    def render_button(self, selected_choices, name, id_, num_id, option_value, option_label):
+        option_value = force_unicode(option_value)
+        if option_value in selected_choices:
+            label_selected_html = u' active'
+            input_selected_html = u' checked'
+            if not self.allow_multiple_selected:
+                # Only allow for a single selection.
+                selected_choices.remove(option_value)
+        else:
+            label_selected_html = ''
+            input_selected_html = ''
+        return u'<label class="btn btn-default btn%s%s" id="label_%s_%s"><input type="checkbox" class="rad rad%s" name="%s" value="%s" id="rad_%s_%s" %s />%s</label>' % (
+            conditional_escape(force_unicode(option_label)),
+            label_selected_html, id_, num_id,
+            conditional_escape(force_unicode(option_label)),
+            name, escape(option_value),
+            id_, num_id,
+            input_selected_html,
+            conditional_escape(force_unicode(option_label)))
+
+    def render_buttons(self, choices, name, id_, num_id, selected_choices):
+        # Normalize to strings.
+        selected_choices = set(force_unicode(v) for v in selected_choices)
+        output = []
+        for option_value, option_label in chain(self.choices, choices):
+          output.append(self.render_button(selected_choices, name, id_, num_id, option_value, option_label))
+          num_id = num_id + 1
+        return u'\n'.join(output)
+
+
+
+
+
+
+# --------------------------------------------------------------------------------------------
 
 class DateTimeTextImput(DateTimeInput):
     def render(self, name, value, attrs={}):
