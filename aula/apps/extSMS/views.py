@@ -6,8 +6,10 @@ from django.forms.models import modelformset_factory
 from django.template import RequestContext
 from django.db.models import Q
 import subprocess
+from datetime import date
 import re
 from aula.apps.alumnes.models import Alumne, Grup
+from aula.apps.usuaris.models import User2Professor
 from aula.utils.tools import getImpersonateUser
 from models import SMS, TelefonTutors
 from forms import smsForm, TelfForm
@@ -88,27 +90,80 @@ def triaGrupsTelefons(request):
 
 # DAVID -- TODO -- 2.0 -- Funcio per la nova pantalla
 # Agafar tots els alumnes i fer bootstrap-radios amb els seus telefons...
+# @login_required
+# @group_required(['consergeria'])
+# def generaTelefons(request, grup=""):
+#
+#     TelefonFormset = modelformset_factory(TelefonTutors, form=TelfForm, extra = 0)
+#
+#     alumnes = Alumne.objects.filter(grup=grup, data_baixa__isnull = True ).order_by('grup__curs', 'grup__nom_grup', 'nom')
+#     if request.method == 'POST':
+#         print request.POST
+#         formset = TelefonFormset(request.POST, queryset=alumnes)
+#         for form in formset:
+#             if form.is_valid():
+#                 form.save()
+#                 #print form.fields[""].
+#             else:
+#                 print form.errors
+#
+#
+#     grup_actual = Grup.objects.get(id=grup)
+#     formset = TelefonFormset(queryset=alumnes)
+#
+#     return render_to_response('generaTelefons.html', {'formset': formset, 'grup':grup_actual, 'head': 'Genera Telefons'}, context_instance=RequestContext(request))
+#################################
+
 @login_required
 @group_required(['consergeria'])
 def generaTelefons(request, grup=""):
 
-    TelefonFormset = modelformset_factory(TelefonTutors, form=TelfForm, extra = 0)
+    credentials = getImpersonateUser(request)
+    (user, _ ) = credentials
 
-    alumnes = Alumne.objects.filter(grup=grup, data_baixa__isnull = True ).order_by('grup__curs', 'grup__nom_grup', 'nom')
-    if request.method == 'POST':
-        print request.POST
-        formset = TelefonFormset(request.POST, queryset=alumnes)
-        for form in formset:
-            print form
+    professor = User2Professor( user )
+    grup_actual = Grup.objects.get(id=grup)
+    head = u"Genera Telefons"
+    formset = []
+
+    tots_ok = request.method == 'POST'
+    missatge = ""
+    #un formulari per a cada alumne.
+    for alumne in Alumne.objects.filter(grup = grup):
+
+        infoform_added = False
+
+        if request.method == 'POST':
+            form = TelfForm(request.POST, prefix=str(alumne.pk), alumne=alumne)
             if form.is_valid():
-                form.save()
-                #print form.fields[""].
+                #esborro els que hi havia i poso els nous:
+                alumne = Alumne.objects.get(pk=form.cleaned_data['idAlumne'])
+                #alumne.telefontutors_set.delete() <-- Aixo no va, no sabem arreglar-ho, ho fem a la linia de sota mes rudimentari
+                tt_temporals = TelefonTutors.objects.filter(alumne=alumne)
+                for temp in tt_temporals: temp.delete()
+                for telf in form.cleaned_data['telefons']:
+                    #r, is_new = TelefonTutors.objects.create(alumne=alumne, telefon=telf) <-- Tampoc ho sabem arreglar, ho fem OldSchool
+                    tt = TelefonTutors()
+                    tt.alumne = alumne
+                    tt.telefon = telf
+                    tt.save()
+                # r.resposta = form.cleaned_data[form.q_valida]
+                # r.save()
             else:
                 print form.errors
+                tots_ok = False
+        else:
+            form = TelfForm(prefix=str(alumne.pk), alumne=alumne)
+            form.infoForm = alumne
+            formset.append(form)
+        #
+        # if not infoform_added:
+        #     infoform_added = True
+        #     form.infoForm = alumne
+        #     form.formSetDelimited = True
+        #     formset.append(form)
 
+    if tots_ok:
+        missatge = "MOSTRAR AVIS DE TOT OK"
 
-    grup_actual = Grup.objects.get(id=grup)
-    formset = TelefonFormset(queryset=alumnes)
-
-    return render_to_response('generaTelefons.html', {'formset': formset, 'grup':grup_actual, 'head': 'Genera Telefons'}, context_instance=RequestContext(request))
-#################################
+    return render_to_response('generaTelefons.html',{'formset': formset,'head': head,'grup':grup_actual, 'missatge': missatge,'formSetDelimited':True},context_instance=RequestContext(request))

@@ -25,15 +25,14 @@ cur = db.cursor()
 cur.execute("SELECT * FROM extsms_SMS WHERE enviat = 0 AND estat = 'enviar' AND telefon <> 'CAP'")
 
 for sms in cur:
-    cur2 = db.cursor()
-    cur2.execute("SELECT telefon FROM extsms_telefonsms WHERE id = "+sms[4]+";")
-    telf = cur2.fetchone()[0]
+    # cur2 = db.cursor()
+    # cur2.execute("SELECT telefon FROM extsms_telefonsms WHERE id = "+sms[4]+";")
+    # telf = cur2.fetchone()[0]
+    telfs = sms[4]
+
     dia = str(sms[2].day) + "/" + str(sms[2].month)
     textbase = "Us informem que el/la vostre/a fill/a ha faltat a classe el dia "+dia+". Per qualsevol dubte truqueu a l\'institut"
 
-
-    #Comensa la party hard amb dj TXTLOCAL
-    numbers = ("+34"+telf)
     message = textbase
 
     values = {'test'    : test_flag,
@@ -41,7 +40,7 @@ for sms in cur:
           'hash'    : hash,
           'message' : message,
           'from'    : sender,
-          'selectednums' : numbers }
+          'selectednums' : telfs }
 
     url = 'http://www.txtlocal.com/sendsmspost.php'
 
@@ -65,4 +64,4 @@ for sms in cur:
         print 'Send failed!'
         print e.reason
 
-print "Fi del script chupiguay"
+print "Fi del script enviar SMSs"

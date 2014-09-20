@@ -5,6 +5,7 @@ import re
 
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.db.models import get_model
+from aula.apps.extSMS.models import TelefonTutors
 
 from aula.apps.usuaris.models import User2Professor, User2Professional
 from aula.apps.tutoria.models import CartaAbsentisme
@@ -81,7 +82,10 @@ def controlAssistencia_clean( instance ):
         #TODO: Falta mirar aixo
         # Si es direcció o consergeria OK
         # else ko
-        if user.pk not in professors_habilitats:
+        es_conserge = user.groups.filter(name__in=['consergeria', ]) != None
+
+
+        if user.pk not in professors_habilitats and not es_conserge:
             errors.setdefault(NON_FIELD_ERRORS, []).append( u'''Només el professor de l'assignatura, 
                                             el professor de guardia que ha passat llista o el tutor poden variar una assistència. 
                                                             ''' )
@@ -148,12 +152,19 @@ def controlAssistencia_post_save(sender, instance, created, **kwargs):
         sms = SMS.objects.filter(alumne = instance.alumne, dia = instance.impartir.dia_impartir)
         hora = instance.impartir.horari.hora
         falta = FaltaSMS.objects.filter(sms = sms, hora = hora)
-
+        telefons = TelefonTutors.objects.filter(alumne=instance.alumne)
+        camp_telefon = ""
+        separator = ""
+        for telf in telefons:
+            camp_telefon += separator + "34"+telf.telefon
+            separator = ","
         if instance.estat and instance.estat.codi_estat == 'F':
             if not sms.exists(): #Crear SMS nou
-                sms = SMS.objects.create(alumne = instance.alumne,
-                                      dia = instance.impartir.dia_impartir)
-                sms.save()
+                if camp_telefon is not "":
+                    sms = SMS.objects.create(alumne = instance.alumne,dia = instance.impartir.dia_impartir,telefon = camp_telefon)
+                    sms.save()
+                else:
+                    print "No es crea el SMS perque no hi han telefons"
                 # regex = re.compile("\d{9}\d*")
                 #telefons = re.findall("\d{9}\d*", instance.alumne.telefons)
 

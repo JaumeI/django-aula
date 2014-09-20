@@ -14,7 +14,7 @@ class SMS(models.Model):
     alumne = models.ForeignKey(Alumne)
     dia = models.DateField(db_index=True)
     intents = models.IntegerField(default=0)
-    telefon = models.CharField(max_length=9, default='---')
+    telefon = models.CharField(max_length=255, default='---')
     enviat = models.BooleanField(default=False)
     estat = models.CharField(max_length=20, choices=OPCIONS, default='res')
 

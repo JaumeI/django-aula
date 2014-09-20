@@ -14,9 +14,9 @@
 {% for form in formset %}
     {{ form.id }}
     <div class="row">
-    <div class="col-lg-4">{{ form.instance.nom }} {{ form.instance.cognoms }}</div>
+    <div class="col-lg-4">{{ form.infoForm }}</div>
     <div class="col-lg-4">
-    {% for field in form.visible_fields %}{{ field }}{% endfor %}
+    {% for field in form %}{{ field }}{% endfor %}
     </div>
     </div>
     <hr/>

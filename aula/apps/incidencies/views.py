@@ -1532,12 +1532,12 @@ def justificaFaltes(request, pk, year, month, day):
         formCA=ControlAssistenciaFormF(request.POST, prefix='ca',queryset  = controls )
 
         for form in formCA:
-            print "estic en un form"
+
             control_a = form.instance
             form.fields['estat'].label = u'{0} {1} {2}'.format( control_a.alumne, control_a.impartir.dia_impartir, control_a.impartir.horari.hora )
             form.instance.credentials = credentials
             if 'estat' in form._get_changed_data() and form.is_valid():
-                print "paco porrasss"
+
                 ca=form.save(commit=False)
                 ca.credentials = credentials
                 algunDeBe = True

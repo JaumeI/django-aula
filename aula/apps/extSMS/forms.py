@@ -1,5 +1,6 @@
-from django.forms import ModelForm, Select, CheckboxSelectMultiple
+from django import forms
 import re
+from django.forms import ModelForm
 from aula.apps.alumnes.models import Alumne
 
 from aula.apps.extSMS.models import SMS, TelefonTutors
@@ -27,24 +28,39 @@ class smsForm(ModelForm):
     #     else:
     #         self.fields['telefon'].widget.choices = NULL
 
-class TelfForm(ModelForm):
-    class Meta:
-        model = TelefonTutors
-        fields = ['telefon']
-        widgets = {
-            'telefon': bootStrapButtonSelect(attrs={'class': 'buttons-sms',}),
-        }
+# class TelfForm(ModelForm):
+#     class Meta:
+#         model = TelefonTutors
+#         fields = ['telefon']
+#         widgets = {
+#             #'telefon': bootStrapButtonSelect(attrs={'class': 'buttons-sms',}),
+#             #'telefon' : ModelChoiceField,
+#         }
+#
+#     def __init__(self, *args, **kwargs):
+#         super(TelfForm, self).__init__(*args, **kwargs)
+#         telfs = Alumne.objects.get(id=self.instance.id).telefons
+#         telfs = re.findall("\d{9}\d*", telfs)
+#         results = {}
+#         for telf in telfs:
+#             results[telf] = telf
+#         if results:
+#             self.fields['telefon'] = ChoiceField(choices=results.items())
+#             # self.fields['telefon'].widget.choices = results.iteritems()
+#             # self.fields['telefon'].choices = results.iteritems()
+#         else:
+#             self.fields['telefon'] = ChoiceField(choices=NULL)
+#             # self.fields['telefon'].widget.choices = NULL
+#             # self.fields['telefon'].choices = NULL
+class TelfForm(forms.Form):
+    idAlumne = forms.IntegerField(widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
+        alumne = kwargs.pop('alumne')
         super(TelfForm, self).__init__(*args, **kwargs)
-        telfs = Alumne.objects.get(id=self.instance.id).telefons
+        telfs = alumne.telefons
         telfs = re.findall("\d{9}\d*", telfs)
-        results = {}
-        for telf in telfs:
-            results[telf] = telf
-        if results:
-            self.fields['telefon'].widget.choices = results.items()
-            self.fields['telefon'].choices = results.items()
-        else:
-            self.fields['telefon'].widget.choices = NULL
-            self.fields['telefon'].choices = NULL
+        telefons_choice = [(telf, telf) for telf in telfs]
+        self.fields["idAlumne"].initial = alumne.id
+        self.fields["telefons"] = forms.MultipleChoiceField(required=False, widget=forms.CheckboxSelectMultiple,
+                                                         choices=telefons_choice, initial=[t.telefon for t in alumne.telefontutors_set.all()])
