@@ -265,20 +265,25 @@ def passaLlista( request, pk ):
                                     instance=control_a )
             control_a.professor = User2Professor(user)
             control_a.credentials = credentials
-            if form.is_valid():
-                control_aux = form.save()
-                hiHaRetard |= control_aux.estat.codi_estat == "R" 
-                quelcomBe |= True
+            control_antic = ControlAssistencia.objects.get(id=control_a.id)
+            if control_antic.estat.codi_estat != "J":
+                if form.is_valid():
+                    control_aux = form.save()
+                    hiHaRetard |= control_aux.estat.codi_estat == "R"
+                    quelcomBe |= True
+                else:
+                    totBe = False
+                    #torno a posar el valor que hi havia ( per si el tutor l'ha justificat )
+                    errors_formulari = form._errors
+                    form=ControlAssistenciaForm(
+                                        prefix=str( control_a.pk ),
+                                        instance=ControlAssistencia.objects.get( id= control_a.pk)  )
+                    form._errors =  errors_formulari
+
+            if (control_antic.estat.codi_estat != "J"):
+                form.fields['estat'].label = control_a.alumne
             else:
-                totBe = False
-                #torno a posar el valor que hi havia ( per si el tutor l'ha justificat )
-                errors_formulari = form._errors
-                form=ControlAssistenciaForm(
-                                    prefix=str( control_a.pk ),
-                                    instance=ControlAssistencia.objects.get( id= control_a.pk)  )
-                form._errors =  errors_formulari
-                
-            form.fields['estat'].label = control_a.alumne   
+                form.fields['estat'].label = unicode(control_a.alumne) + ' (justificat)'
             formset.append( form )                
         if quelcomBe:
             impartir.dia_passa_llista = datetime.now()
@@ -319,7 +324,7 @@ def passaLlista( request, pk ):
                                     instance=control_a )
             avui_es_anivesari = ( control_a.alumne.data_neixement.month == impartir.dia_impartir.month and
                                   control_a.alumne.data_neixement.day == impartir.dia_impartir.day )  
-            form.fields['estat'].label = unicode( control_a.alumne ) + ( '(fa anys en aquesta data)' if avui_es_anivesari else '')
+            form.fields['estat'].label = unicode( control_a.alumne ) + ( '(fa anys en aquesta data)' if avui_es_anivesari else '') + (' (justificat)' if control_a.estat.codi_estat == "J" else '')
             formset.append( form )
     
 

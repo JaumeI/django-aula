@@ -21,13 +21,13 @@ def controlAssistencia_clean( instance ):
 
     if l4: return
 
-    isUpdate = instance.pk is not None
-    instance.instanceDB = None if not isUpdate else instance.__class__.objects.get( pk = instance.pk )
+    isUpdate = instance.pk is not None #Si estem editant un control d'assistencia
+    instance.instanceDB = None if not isUpdate else instance.__class__.objects.get( pk = instance.pk ) #Objecte de la base de dades si estem editant
 
     errors = {}
 
     tutors = [ tutor for tutor in instance.alumne.tutorsDeLAlumne() ]
-    if user: instance.professor = User2Professor( user )
+    if user: instance.professor = User2Professor( user ) #Guardem l'usuari que esta fent els canvis
 
     #
     # Només es poden modificar assistències 
@@ -54,6 +54,18 @@ def controlAssistencia_clean( instance ):
                                   La falta d'en {0} no es pot modificar. El tutor Sr(a) {1} ha justificat la falta.  
                                                             '''.format(
             instance.alumne, instance.instanceDB.professor ) )
+
+    #Una falta justificada per consergeria o administracio o direccio no pot ser matxacada per ningú que no siguin ells
+    es_super = user.groups.filter(name__in=['consergeria', ]) != None \
+               or user.groups.filter(name__in=['administradors', ]) != None \
+               or user.groups.filter(name__in=['direcció', ]) != None
+
+
+    if not es_super and justificadaDB:
+        errors.setdefault(NON_FIELD_ERRORS, []).append( u'''
+                                  La falta d'en {0} no es pot modificar. Parla amb el/la cap d'estudis.
+                                                            '''.format(instance.alumne))
+
 
     #No es poden justificar faltes si s'ha enviat una carta.
     if not justificadaDB and justificadaAra:
@@ -85,7 +97,8 @@ def controlAssistencia_clean( instance ):
         es_conserge = user.groups.filter(name__in=['consergeria', ]) != None
 
 
-        if user.pk not in professors_habilitats and not es_conserge:
+
+        if user.pk not in professors_habilitats and not es_conserge and not es_admin and not es_direc:
             errors.setdefault(NON_FIELD_ERRORS, []).append( u'''Només el professor de l'assignatura, 
                                             el professor de guardia que ha passat llista o el tutor poden variar una assistència. 
                                                             ''' )

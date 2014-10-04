@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from aula.apps.alumnes.models import Alumne
 
 from aula.apps.extSMS.models import SMS, TelefonTutors
-from aula.utils.widgets import bootStrapButtonSelect, bootStrapButtonSelectMultiple
+from aula.utils.widgets import bootStrapButtonSelect
 
 NULL = (
     ('OFF', 'No hi ha cap telefon'),

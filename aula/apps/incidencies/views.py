@@ -257,7 +257,7 @@ def posaIncidencia( request ):
                                                             'descripcio_incidencia',
                                                             'es_informativa'])
     formIncidenciaF.base_fields['dia_incidencia'].widget =  DateTextImput()               
-    formIncidenciaF.base_fields['descripcio_incidencia'].widget = forms.TextInput(attrs={'style':'width:400px;'} )   
+    formIncidenciaF.base_fields['descripcio_incidencia'].widget = forms.TextInput(attrs={'style':'width:400px;'} )
 
     formset = []
     if request.method == 'POST':

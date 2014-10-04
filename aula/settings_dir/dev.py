@@ -10,8 +10,8 @@ SQL_DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'djangoaula',
-        'USER': 'userdjangoaula',
+        'NAME': 'djangoaula2',
+        'USER': 'root',
         'PASSWORD': 'i',
         'HOST': '',
     }
