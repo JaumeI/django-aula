@@ -5,6 +5,7 @@ import re
 
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.db.models import get_model
+from django.http import request
 from aula.apps.extSMS.models import TelefonTutors
 
 from aula.apps.usuaris.models import User2Professor, User2Professional
@@ -17,7 +18,8 @@ from aula.apps.incidencies.business_rules.incidencia import incidencia_despres_d
 #-------------ControlAssistencia-------------------------------------------------------------      
 
 def controlAssistencia_clean( instance ):
-    ( user, l4)  = instance.credentials if hasattr( instance, 'credentials') else (None,None,)
+
+    (user, l4) = instance.credentials if hasattr(instance, 'credentials') else (None, None,)
 
     if l4: return
 
@@ -27,7 +29,10 @@ def controlAssistencia_clean( instance ):
     errors = {}
 
     tutors = [ tutor for tutor in instance.alumne.tutorsDeLAlumne() ]
-    if user: instance.professor = User2Professor( user ) #Guardem l'usuari que esta fent els canvis
+    if user:
+        instance.professor = User2Professor( user ) #Guardem l'usuari que esta fent els canvis
+    else: #Si no hi ha usuari donem per suposat que es L4... (temporal)
+        maybel4 = True
 
     #
     # Només es poden modificar assistències 
@@ -56,9 +61,12 @@ def controlAssistencia_clean( instance ):
             instance.alumne, instance.instanceDB.professor ) )
 
     #Una falta justificada per consergeria o administracio o direccio no pot ser matxacada per ningú que no siguin ells
-    es_super = user.groups.filter(name__in=['consergeria', ]) != None \
-               or user.groups.filter(name__in=['administradors', ]) != None \
-               or user.groups.filter(name__in=['direcció', ]) != None
+    if maybel4:
+        es_super = True
+    else:
+        es_super = user.groups.filter(name__in=['consergeria', ]) != None \
+                   or user.groups.filter(name__in=['administradors', ]) != None \
+                   or user.groups.filter(name__in=['direcció', ]) != None
 
 
     if not es_super and justificadaDB:
