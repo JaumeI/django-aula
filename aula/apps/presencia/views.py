@@ -273,7 +273,8 @@ def passaLlista( request, pk ):
                         control_aux = form.save()
                 else:
                     control_aux = form.save()
-                hiHaRetard |= control_aux.estat.codi_estat == "R"
+                if control_aux is not None:
+                    hiHaRetard |= control_aux.estat.codi_estat == "R"
                 quelcomBe |= True
                 justificat = True
             else:

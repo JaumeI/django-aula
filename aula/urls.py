@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     #(r'^horaris/', include('horaris.urls')),
     (r'^extKronowin/', include('aula.apps.extKronowin.urls')),
     (r'^extSaga/', include('aula.apps.extSaga.urls')),
-
+    url(r'^validate-muntfessors-user$', 'aula.apps.usuaris.views.validaMuntfessorsUser', name = 'muntf__validate__user'),
     url(r'^promocions/(?P<grup>\d+)/$', 'aula.apps.promocions.views.mostraGrup', name = 'administracio__promocions__grups'),
     url(r'^promocions/nou-alumne', 'aula.apps.promocions.views.nouAlumne', name = 'administracio__promocions__noualumne'),
     url(r'^promocions/', 'aula.apps.promocions.views.llistaGrups', name = 'administracio__promocions__llista'),

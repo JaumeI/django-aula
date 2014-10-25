@@ -1,7 +1,10 @@
 # This Python file uses the following encoding: utf-8
 
 #templates
+from django.contrib.auth.hashers import check_password
+from django.core import serializers
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 
 from aula.apps.usuaris.forms import CanviDadesUsuari, triaUsuariForm, loginUsuariForm,\
     recuperacioDePasswdForm, sendPasswdByEmailForm, canviDePasswdForm
@@ -12,7 +15,7 @@ from aula.utils.decorators import group_required
 from aula.apps.extKronowin.models import ParametreKronowin
 
 #workflow
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 
 #helpers
@@ -467,6 +470,18 @@ def sendPasswdByEmail( request ):
         {'form': form,
          'head': u'Recuperació de Contrasenya' 
          },
-        context_instance=RequestContext(request))  
-            
-            
+        context_instance=RequestContext(request))
+
+
+
+@csrf_exempt
+def validaMuntfessorsUser(request):
+
+    if request.method == "POST":
+        try:
+            user = User.objects.get(username = request.POST.get('username'))
+        except User.DoesNotExist:
+            return HttpResponse("KO", content_type='application/json')
+        if check_password(request.POST.get('password'), user.password):
+            return HttpResponse("OK", content_type='application/json')
+    return HttpResponse("KO", content_type='application/json')
