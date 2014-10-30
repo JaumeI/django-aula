@@ -84,7 +84,7 @@ def posaIncidenciaAula(request, pk):           #pk = pk_impartir
             frases_de_la_bdd = form.cleaned_data['frases']
             #frase_manual = form.cleaned_data['frase']
             frase_manual = ""
-            es_informativa = form.cleaned_data['es_informativa']
+            es_informativa = True
             totes_les_frases = [ frase.frase for frase in frases_de_la_bdd ] + ( [ frase_manual ] if frase_manual else []    )
             
             s_ha_pogut_crear_la_incidencia = False
@@ -503,7 +503,8 @@ def editaExpulsio( request, pk ):
           ( 'Professor que recull expulsió', expulsio.professor_recull if expulsio.professor_recull else 'N/A'),                     
                 ]
     
-    fields = [ 'motiu_expulsio', 
+    fields = [
+              #'motiu_expulsio', treure el motiu de l'expulsio
               'tutor_contactat_per_l_expulsio', 
               'moment_comunicacio_a_tutors', 
               'tramitacio_finalitzada' ]
@@ -1308,7 +1309,7 @@ def editaExpulsioCentre( request, pk ):
               'data_fi',
               'franja_fi',
               'data_carta',
-              'motiu_expulsio',
+              #'motiu_expulsio',
               'obra_expedient',
               'comentaris_cap_d_estudis' ,
               'signat' ]

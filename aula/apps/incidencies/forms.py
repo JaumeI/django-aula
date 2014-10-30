@@ -55,11 +55,11 @@ class posaIncidenciaAulaForm(forms.Form):
     #                                    Atenció: Pots escriure i triar frase a la vegada: es crearan dues incidències.
     #                                    """  )
  
-    es_informativa = forms.BooleanField( required = False,  
-                                         help_text=u"""Indica si aquesta incidència és purament informativa. 
-                                                     Marca aquesta casella amb incidències del tipus: "Avui s'ha esforçat molt",
-                                                     "No ha assistit a l'examen de trimestre", etc.
-                                                     """)
+    # es_informativa = forms.BooleanField( required = False,
+    #                                      help_text=u"""Indica si aquesta incidència és purament informativa.
+    #                                                  Marca aquesta casella amb incidències del tipus: "Avui s'ha esforçat molt",
+    #                                                  "No ha assistit a l'examen de trimestre", etc.
+    #                                                  """)
     def __init__(self, *args, **kwargs):
         self.queryset = kwargs.pop('queryset', None)
         self.etiqueta = kwargs.pop('etiqueta', None)
