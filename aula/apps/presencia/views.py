@@ -267,6 +267,7 @@ def passaLlista( request, pk ):
             control_a.credentials = credentials
             justificat = False
             control_antic = ControlAssistencia.objects.get(id=control_a.id)
+            control_aux = None
             if form.is_valid():
                 if control_antic.estat is not None:
                     if control_antic.estat.codi_estat != "J":

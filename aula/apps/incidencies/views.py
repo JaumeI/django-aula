@@ -703,6 +703,7 @@ def llistaIncidenciesProfessional( request ):
     alumnes = {}
     for incidencia in professional.incidencia_set.all():
         alumne_str = unicode ( incidencia.alumne)
+        #alumne_str = unicode ( incidencia.alumne.grup.descripcio_grup)
         fa_30_dies = date.today() - timedelta( days = 30 )
         incidenciesAlumne = incidencia.alumne.incidencia_set.filter(
                                                         professional = professional, 
@@ -732,6 +733,7 @@ def llistaIncidenciesProfessional( request ):
 
     alumnesOrdenats = []
     for alumneKey in sorted(alumnes.iterkeys()):
+    #for alumneKey in sorted(alumnes, key=lambda alumne: alumne.grup.desc):
         tupla = (alumneKey, alumnes[alumneKey], )
         alumnesOrdenats.append( tupla  )
 
