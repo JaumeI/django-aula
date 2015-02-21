@@ -95,26 +95,40 @@
       }
     </style>
 <script>
+function netejaTargets(targets) {
+    $.each(targets, function(index, item) {
+            $(item).parent().parent().find('.btn').removeClass('active');
+            $(item).parent().parent().find('.rad').prop('checked', false);
 
-function totnet() {
-    $(".btn").removeClass("active");
-    $(".rad").prop("checked", false);
+        });
 }
 $(document).ready(function() {
+    var targets = $('.radres[checked]');
     $('#totenviar').click(function() {
-        totnet();
-        $('.btnenviar').trigger('click');
-        $(".btnenviar .rad").prop("checked", true);
+        netejaTargets(targets);
+        $.each(targets, function(index, item) {
+            $(item).parent().parent().find('.btnenviar').trigger('click');
+            $(item).parent().parent().find('.btnenviar .rad').prop('checked', true);
+
+        });
+        //$('.btnenviar').trigger('click');
+        //$(".btnenviar .rad").prop("checked", true);
     });
     $('#totanular').click(function() {
-        totnet();
-        $('.btnanular').trigger('click');
-        $(".btnanular .rad").prop("checked", true);
+        netejaTargets(targets);
+        $.each(targets, function(index, item) {
+            $(item).parent().parent().find('.btnanular').trigger('click');
+            $(item).parent().parent().find('.btnanular .rad').prop('checked', true);
+
+        });
     });
     $('#totres').click(function() {
-        totnet();
-        $('.btnres').trigger('click');
-        $(".btnres .rad").prop("checked", true);
+        netejaTargets(targets);
+        $.each(targets, function(index, item) {
+            $(item).parent().parent().find('.btnres').trigger('click');
+            $(item).parent().parent().find('.btnres .rad').prop('checked', true);
+
+        });
     });
 
 });

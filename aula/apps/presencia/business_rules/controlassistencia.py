@@ -31,6 +31,7 @@ def controlAssistencia_clean( instance ):
     tutors = [ tutor for tutor in instance.alumne.tutorsDeLAlumne() ]
     if user:
         instance.professor = User2Professor( user ) #Guardem l'usuari que esta fent els canvis
+        maybel4 = False
     else: #Si no hi ha usuari donem per suposat que es L4... (temporal)
         maybel4 = True
 

@@ -182,7 +182,7 @@ def reportFaltesIncidencies( dataInici, dataFi , alumnes_informe = [], alumnes_r
                         report.expulsions.append(item)
 
                     item = tools.classebuida()
-                    item.item = u'Expulsions'
+                    item.item = u'Expulsions de l\'aula'
                     item.valor = n_expulsions
                     report.resum.append( item )
                     

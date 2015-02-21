@@ -40,7 +40,7 @@ def llistaSMS(request):
             if form.is_valid():
                 form.save()
         subprocess.Popen(["python", "aula/apps/extSMS/enviar.py"])
-    formset = SmsFormset(queryset=SMS.objects.filter(~Q(estat='enviar'), enviat=False).order_by('-estat', '-dia', 'alumne__grup__curs', 'alumne__grup__nom_grup', 'alumne'))
+    formset = SmsFormset(queryset=SMS.objects.filter(enviat=False).order_by('-estat', '-dia', 'alumne__grup__curs', 'alumne__grup__nom_grup', 'alumne'))
 
     return render_to_response('mostraSMS.html', {'formset': formset, 'head': 'Envia SMS'}, context_instance=RequestContext(request))
 
