@@ -1,10 +1,9 @@
 {% extends "formset.html" %}
 
-{% block extrahead %} 
+{% block extrahead %}
 
 <script>
-
-	function norecordatoris() {	
+	function norecordatoris() {
 	  {% for f in formset %}
 	     {% if f.opcio.value = 'r' %}
 	     	$('#id_{{f.prefix}}-opcio_1').prop("checked", true);
@@ -12,18 +11,26 @@
 	     {% if f.opcio.value %}
 	     	$('#id_{{f.prefix}}-opcio_2').parent().parent().remove();
 	     {% endif %}
-		
+
 	  {% endfor %}
     }
 
+    function noimprimirres() {
+      {% for f in formset %}
+        $('#id_{{f.prefix}}-opcio_1').prop("checked", true);
+      {% endfor %}
+    }
     $(document).ready(
-    function($){    
-      $("#noPrint").click(function(){
+    function($){
+      $("#noPrintRecordatori").click(function(){
     	norecordatoris();
       });
+      $("#noPrintRes").click(function(){
+    	noimprimirres();
+      });
     });
-    
-</script>	
+
+</script>
 
 {% endblock %}
 
@@ -33,8 +40,8 @@
             {{missatge}}
           </div>
 	  {% endif %}
-	  
-	  <a class="btn btn-primary" id="noPrint">No imprimir recordatoris!</a>
-	  
+	  <p>
+	  <a class="btn btn-info" id="noPrintRecordatori">No imprimir recordatoris</a>
+	  <a class="btn btn-info" id="noPrintRes">Selecci&oacute; manual</a>
+	  </p>
 {% endblock %}
-

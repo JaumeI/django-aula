@@ -140,17 +140,19 @@ def reportFaltesIncidencies( dataInici, dataFi , alumnes_informe = [], alumnes_r
                                                          if incidencia.es_incidencia_d_aula() else ''
                         except:
                             pass
+
+                        #TODO: MUNTANER -- Si canvia la frase dels retards...
+                        if(incidencia.descripcio_incidencia != "Ha arribat tard a classe."):
+                            item = tools.classebuida()
+                            item.dia = incidencia.dia_incidencia.strftime( '%d/%m/%Y' )
+                            item.hora = incidencia.franja_incidencia.hora_inici.strftime('%H:%M')
+                            item.assignatura = NomAssignatura
+                            item.professor = incidencia.professional
+                            item.incidencia = incidencia.descripcio_incidencia
                         
-                        item = tools.classebuida()
-                        item.dia = incidencia.dia_incidencia.strftime( '%d/%m/%Y' )
-                        item.hora = incidencia.franja_incidencia.hora_inici.strftime('%H:%M') 
-                        item.assignatura = NomAssignatura
-                        item.professor = incidencia.professional 
-                        item.incidencia = incidencia.descripcio_incidencia
+                            n_incidencies += 1
                         
-                        n_incidencies += 1
-                        
-                        report.incidencies.append(item)
+                            report.incidencies.append(item)
                     
                     item = tools.classebuida()
                     item.item = u'Incidències'
@@ -211,7 +213,7 @@ def reportFaltesIncidencies( dataInici, dataFi , alumnes_informe = [], alumnes_r
             path = os.path.join( settings.PROJECT_DIR,  '../customising/docs/faltesIncidencies.odt' )
         except: 
             path = os.path.join(os.path.dirname(__file__), 'templates/faltesIncidencies.odt')
-                    
+
         renderer = Renderer(path, {'reports' : reports, }, resultat)  
         renderer.run()
         docFile = open(resultat, 'rb')
