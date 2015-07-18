@@ -540,8 +540,8 @@ def afegeixAlumnesLlista(request, pk):
     #seg-------------------------------
     pertany_al_professor = user.pk in [ impartir.horari.professor.pk,   \
                                         impartir.professor_guardia.pk if impartir.professor_guardia else -1 ]
-    #if not ( l4 or pertany_al_professor):
-    if not (l4):
+    if not ( l4 or pertany_al_professor):
+    #if not (l4):
         return render_to_response("no-access.html", context_instance=RequestContext(request))
 
     alumnes_pk = [ ca.alumne.pk for ca in impartir.controlassistencia_set.all()]
@@ -654,8 +654,8 @@ def treuAlumnesLlista(request, pk):
     #seg-------------------------------
     pertany_al_professor = user.pk in [ impartir.horari.professor.pk,   \
                                        impartir.professor_guardia.pk if impartir.professor_guardia else -1]
-    #if not ( l4 or pertany_al_professor):
-    if not (l4):
+    if not ( l4 or pertany_al_professor):
+    #if not (l4):
         return render_to_response("no-access.html", context_instance=RequestContext(request))
 
 
