@@ -13,7 +13,7 @@ from aula.utils.decorators import group_required
 @group_required(['direccio'])
 def llistaGrups(request):
     grups = Grup.objects.all().order_by("descripcio_grup")
-    return render_to_response('mostraGrups.html', {"grups" : grups}, context_instance=RequestContext(request))
+    return render_to_response('mostraGrupsPromo.html', {"grups" : grups}, context_instance=RequestContext(request))
 
 @login_required
 @group_required(['direccio'])
@@ -66,7 +66,7 @@ def mostraGrup(request, grup=""):
     if (len(alumnes) == 0):
 
         msg = "Aquest grup no te alumnes actualment."
-        return render_to_response('mostraGrups.html', {"grups" : grups, "msg": msg}, context_instance=RequestContext(request))
+        return render_to_response('mostraGrupsPromo.html', {"grups" : grups, "msg": msg}, context_instance=RequestContext(request))
 
     formset = PromoFormset(queryset=alumnes)
 
