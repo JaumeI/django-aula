@@ -72,6 +72,7 @@ def reportFaltesIncidencies( dataInici, dataFi , alumnes_informe = [], alumnes_r
                     n_faltes = 0
                     n_retards = 0
                     n_justificades = 0
+                    n_expulsions_noves = 0
                     for ca in alumne.controlassistencia_set.filter( q_desde & q_finsa & ~q_presencia & ~q_null ).order_by( 'impartir__dia_impartir', 'impartir__horari')  :
                         
                         itemAssitencia = tools.classebuida()
@@ -85,6 +86,8 @@ def reportFaltesIncidencies( dataInici, dataFi , alumnes_informe = [], alumnes_r
                             n_faltes += 1
                         elif ca.estat.codi_estat == 'J':
                             n_justificades += 1
+                        elif ca.estat.codi_estat == 'E':
+                            n_expulsions_noves += 1
                             
                         report.assistencia.append( itemAssitencia )
                     
@@ -102,6 +105,8 @@ def reportFaltesIncidencies( dataInici, dataFi , alumnes_informe = [], alumnes_r
                     item.item = u'Retards'
                     item.valor = n_retards
                     report.resum.append( item )
+
+
 
                     q_informativa = Q( es_informativa = True )
                     q_desde = Q( dia_incidencia__gte = dataInici )
@@ -162,33 +167,39 @@ def reportFaltesIncidencies( dataInici, dataFi , alumnes_informe = [], alumnes_r
                     q_desde = Q( dia_expulsio__gte = dataInici )
                     q_finsa = Q( dia_expulsio__lte = dataFi )
                     q_esborrany = Q(estat = 'ES' )
-                    
-                    n_expulsions = 0
-                    for expulsio in alumne.expulsio_set.filter( q_desde & q_finsa & ~q_esborrany ):
-                        NomAssignatura =  ''
-                        try:
-                            NomAssignatura = expulsio.control_assistencia.impartir.horari.assignatura.getLongName() \
-                                                         if expulsio.es_incidencia_d_aula() else ''
-                        except:
-                            pass
+
+
+                    #n_expulsions = 0
+                    #for expulsio in alumne.expulsio_set.filter( q_desde & q_finsa & ~q_esborrany ):
+                    #    NomAssignatura =  ''
+                    #    try:
+                    #        NomAssignatura = expulsio.control_assistencia.impartir.horari.assignatura.getLongName() \
+                    #                                     if expulsio.es_incidencia_d_aula() else ''
+                    #    except:
+                    #        pass
+                    #
+                    #    item = tools.classebuida()
+                    #    item.dia = expulsio.dia_expulsio.strftime( '%d/%m/%Y' )
+                    #    item.hora = expulsio.franja_expulsio.hora_inici.strftime('%H:%M')
+                    #    item.assignatura = NomAssignatura
+                    #    item.professor = expulsio.professor
+                    #    item.motiu = expulsio.motiu_expulsio
                         
-                        item = tools.classebuida()
-                        item.dia = expulsio.dia_expulsio.strftime( '%d/%m/%Y' )
-                        item.hora = expulsio.franja_expulsio.hora_inici.strftime('%H:%M') 
-                        item.assignatura = NomAssignatura
-                        item.professor = expulsio.professor 
-                        item.motiu = expulsio.motiu_expulsio
+                    #    n_expulsions += 1
                         
-                        n_expulsions += 1
-                        
-                        report.expulsions.append(item)
+                    #    report.expulsions.append(item)
+
+                    #item = tools.classebuida()
+                    #item.item = u'Expulsions de l\'aula'
+                    #item.valor = n_expulsions
+                    #report.resum.append( item )
 
                     item = tools.classebuida()
-                    item.item = u'Expulsions de l\'aula'
-                    item.valor = n_expulsions
+                    item.item = u'Expulsions'
+                    item.valor = n_expulsions_noves
                     report.resum.append( item )
-                    
-                    report.detall = report.informe and ( n_expulsions + n_incidencies + n_informatives + n_faltes + n_justificades + n_retards > 0 )
+
+                    report.detall = report.informe and ( n_expulsions_noves + n_incidencies + n_informatives + n_faltes + n_justificades + n_retards > 0 )
                                             
                     if report: reports.append( report )      
                     
