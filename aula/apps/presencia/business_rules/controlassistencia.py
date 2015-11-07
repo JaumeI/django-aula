@@ -44,10 +44,11 @@ def controlAssistencia_clean( instance ):
 
     #todo: altres controls:
     daqui_2_hores = dt.datetime.now() + dt.timedelta( hours = 2)
-    if isUpdate and instance.impartir.diaHora() > daqui_2_hores :
-        errors.setdefault(NON_FIELD_ERRORS, []).append( u'''Encara no es pot entrar aquesta assistència 
-                                    (Falta {0} per poder-ho fer )'''.format(
-            instance.impartir.diaHora()  - daqui_2_hores ) )
+
+    #if isUpdate and instance.impartir.diaHora() > daqui_2_hores :
+    #    errors.setdefault(NON_FIELD_ERRORS, []).append( u'''Encara no es pot entrar aquesta assistència
+    #                                (Falta {0} per poder-ho fer )'''.format(
+    #        instance.impartir.diaHora()  - daqui_2_hores ) )
 
     #Una falta justificada pel tutor no pot ser matxacada per un professor
     socTutor = hasattr(instance, 'professor') and instance.professor and instance.professor in tutors
