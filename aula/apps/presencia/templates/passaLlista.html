@@ -30,6 +30,13 @@
         background-color: #eea236;
         border-color: #ec971f;
       }
+
+    .btn.btnExpulsat.active,
+      .btn.btnExpulsat:active {
+        background-color: #d43f3a;
+        border-color: #c9302c;
+        color: white;
+      }
     </style>
     
     <script type="text/javascript">
@@ -41,7 +48,19 @@
       }
 
       $(document).ready(
+
       function($){
+      // TODO: Si en Jaume vol deshabilitar inputs si arriben expulsat, es fa des d'aquí, s'ha d'acabar
+          /*$.each($('.btnExpulsat'), function(index, item) {
+            if ($(item).hasClass('active')) {
+
+                console.log($(item).closest('.btn-group'));
+                $(item).closest('.btn-group').find('input').prop('disabled', true);
+                $(item).closest('.btn-group').find('label, input').unbind('click').unbind('change');
+                console.log($(item).closest('.btn-group').find('label'));
+
+            }
+          });*/
           /* Posar tot a ... */
           $("#totpresent, #totpresent2").click(function(){
             totnet();
