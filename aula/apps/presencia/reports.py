@@ -4,6 +4,7 @@ from aula.apps.alumnes.models import Alumne
 from django.db.models.aggregates import Count
 from django.db.models import Q
 from itertools import chain
+from aula.apps.presencia.models import ControlAssistencia
 
 def alertaAssitenciaReport( data_inici, data_fi, nivell, tpc , ordenacio ):
     report = []
@@ -52,21 +53,36 @@ def alertaAssitenciaReport( data_inici, data_fi, nivell, tpc , ordenacio ):
 
 
     taula.fileres = []
-    
 
-    q_nivell = Q( grup__curs__nivell = nivell )
-    q_data_inici = Q(  controlassistencia__impartir__dia_impartir__gte = data_inici  )
-    q_data_fi = Q(  controlassistencia__impartir__dia_impartir__lte = data_fi  )
-    q_filte = q_nivell & q_data_inici & q_data_fi
-    q_alumnes = Alumne.objects.filter( q_filte )
+    q_alumnes = Alumne.objects.filter( grup__curs__nivell = nivell )
 
-    q_p = q_alumnes.filter( controlassistencia__estat__codi_estat__in = ('P','R' ) ).order_by().distinct().annotate( x=Count('controlassistencia__estat') ).values_list( 'id', 'x' )
-    q_j = q_alumnes.filter( controlassistencia__estat__codi_estat = 'J' ).order_by().distinct().annotate( x=Count('controlassistencia__estat') ).order_by().distinct().values_list( 'id', 'x' )
-    q_f = q_alumnes.filter( controlassistencia__estat__codi_estat = 'F' ).order_by().distinct().annotate( x=Count('controlassistencia__estat') ).values_list( 'id', 'x' )
-    
-    dict_p, dict_j, dict_f = dict( q_p ), dict( q_j ), dict( q_f )
-    
-    #ajuntar dades diferents fonts
+    q_data_inici = Q( impartir__dia_impartir__gte = data_inici  )
+    q_data_fi = Q( impartir__dia_impartir__lte = data_fi  )
+    q_filtre = q_data_inici & q_data_fi
+    q_controls = ControlAssistencia.objects.filter(  alumne__in = q_alumnes ).filter( q_filtre )
+
+    q_p = q_controls.filter( estat__codi_estat__in = ('P','R' ) ).order_by().values_list( 'id','alumne__id' ).distinct()
+    q_j = q_controls.filter( estat__codi_estat = 'J' ).order_by().values_list( 'id','alumne__id' ).distinct()
+    q_f = q_controls.filter( estat__codi_estat = 'F' ).order_by().values_list( 'id','alumne__id' ).distinct()
+
+    from itertools import groupby
+    dict_p = {}
+    data = sorted(q_p, key=lambda x: x[1])
+    for k, g in groupby( data, lambda x: x[1] ):
+        dict_p[k] = len( list(g) )
+
+    dict_j = {}
+    data = sorted(q_j, key=lambda x: x[1])
+    for k, g in groupby( data, lambda x: x[1] ):
+        dict_j[k] = len( list(g) )
+
+    dict_f = {}
+    data = sorted(q_f, key=lambda x: x[1])
+    for k, g in groupby( data, lambda x: x[1] ):
+        dict_f[k] = len( list(g) )
+
+
+
     alumnes = []
     for alumne in q_alumnes.select_related( 'grup', 'grup__curs' ).order_by().distinct():
         alumne.p = dict_p.get( alumne.id, 0)
@@ -83,7 +99,8 @@ def alertaAssitenciaReport( data_inici, data_fi, nivell, tpc , ordenacio ):
     order_n = lambda a: ( -1 * a.tpc, -1 * a.f )
     order_cn = lambda a: ( a.grup.curs.nom_curs, a.grup.nom_grup  , -1 * a.tpc)
     order = order_ca if ordenacio == 'ca' else order_n if ordenacio == 'n' else order_cn if ordenacio == 'cn' else order_a
-    
+
+
     
     for alumne in  sorted( [ a for a in alumnes if a.tpc > tpc ] , key=order  ):   
                 
