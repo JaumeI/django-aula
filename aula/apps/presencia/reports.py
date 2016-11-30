@@ -59,9 +59,10 @@ def alertaAssitenciaReport( data_inici, data_fi, nivell, tpc , ordenacio ):
     q_data_inici = Q( impartir__dia_impartir__gte = data_inici  )
     q_data_fi = Q( impartir__dia_impartir__lte = data_fi  )
     q_filtre = q_data_inici & q_data_fi
-    q_controls = ControlAssistencia.objects.filter(  alumne__in = q_alumnes ).filter( q_filtre )
+    q_controls = ControlAssistencia.objects.filter( alumne__in = q_alumnes ).filter( q_filtre )
 
-    q_p = q_controls.filter( estat__codi_estat__in = ('P','R' ) ).order_by().values_list( 'id','alumne__id' ).distinct()
+    # 30/11/2016 - Afegit el Q(estat__codi_estat__isnull=True) per tal de retornar també aquelles assistencies sense passar llista
+    q_p = q_controls.filter( Q(estat__codi_estat__in = ('P','R' )) | Q(estat__codi_estat__isnull=True) ).order_by().values_list( 'id','alumne__id' ).distinct()
     q_j = q_controls.filter( estat__codi_estat = 'J' ).order_by().values_list( 'id','alumne__id' ).distinct()
     q_f = q_controls.filter( estat__codi_estat = 'F' ).order_by().values_list( 'id','alumne__id' ).distinct()
 

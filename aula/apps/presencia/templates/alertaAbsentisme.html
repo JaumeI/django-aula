@@ -1,26 +1,6 @@
 {% extends "form.html" %}
 
-{% block extrahead %} 
+{% block extrahead %}
 
-{#
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function()  {
-		$( "#id_tpc" ).parent().append('<div id="slider-range-max"></div>');
-        $( "#slider-range-max" ).slider({
-			range: "max",
-			min: 1,
-			max: 100,
-			value: 25,
-			slide: function( event, ui ) {
-				$( "#id_tpc" ).val( ui.value );
-			}
-		});
-		$( "#id_tpc" ).val( $( "#slider-range-max" ).slider( "value" ) );
-	});
-
-</script>
-
-#}
 {% endblock %}
 
