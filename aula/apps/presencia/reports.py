@@ -15,6 +15,7 @@ def alertaAssitenciaReport( data_inici, data_fi, nivell, tpc , ordenacio ):
     taula.titol = tools.classebuida()
     taula.titol.contingut = u'Ranking absència alumnes nivell {0}'.format( nivell )
     taula.capceleres = []
+    taula.recompte = dict()
     
     capcelera = tools.classebuida()
     capcelera.amplade = 300
@@ -92,6 +93,21 @@ def alertaAssitenciaReport( data_inici, data_fi, nivell, tpc , ordenacio ):
         alumne.ca = alumne.p + alumne.j + alumne.f or 0.0
         alumne.tpc = ( float( alumne.f ) / float( alumne.ca ) ) * 100.0 if alumne.ca > 0 else 0
         alumne.tpc_assist =  ( float( alumne.p )  / float( alumne.ca ) ) * 100.0 if alumne.ca > 0 else 0
+
+        if alumne.grup.curs.nom_curs_complert in taula.recompte:
+            taula.recompte[alumne.grup.curs.nom_curs_complert]['total'] += 1
+        else:
+            taula.recompte[alumne.grup.curs.nom_curs_complert] = {
+                'total' : 1,
+                'total_tpc' : 0,
+                'percent' : 0
+            }
+            print taula.recompte[alumne.grup.curs.nom_curs_complert]
+
+        if alumne.tpc > tpc:
+            taula.recompte[alumne.grup.curs.nom_curs_complert]['total_tpc'] += 1
+
+
         alumnes.append(alumne)
     #----------------------
     #choices = ( ('a', u'Nom alumne',), ('ca', u'Curs i alumne',),('n',u'Per % Assistència',), ('cn',u'Per Curs i % Assistència',),
@@ -101,6 +117,8 @@ def alertaAssitenciaReport( data_inici, data_fi, nivell, tpc , ordenacio ):
     order_cn = lambda a: ( a.grup.curs.nom_curs, a.grup.nom_grup  , -1 * a.tpc)
     order = order_ca if ordenacio == 'ca' else order_n if ordenacio == 'n' else order_cn if ordenacio == 'cn' else order_a
 
+    for rcurs, robject in taula.recompte.items():
+        robject['percent'] = (float(robject['total_tpc']) / float(robject['total'])) * 100
 
     
     for alumne in  sorted( [ a for a in alumnes if a.tpc > tpc ] , key=order  ):   

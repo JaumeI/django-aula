@@ -29,6 +29,26 @@
 	
 	  {% if taula.titol.enllac %}<a href="{{ taula.titol.enllac }}">{%endif%}
 	  {{ taula.titol.contingut }}
+
+      {% if taula.recompte %}
+        <br/>
+          <table>
+            <tr>
+                <th style="min-width: 100px">Curs</th>
+                <th style="min-width: 100px">Assistència</th>
+                <th style="min-width: 100px">Percentatge</th>
+            </tr>
+
+        {% for rcurs, robject in taula.recompte.items %}
+            <tr>
+                <td>{{ rcurs }}</td>
+                <td>{{ robject.total_tpc }}/{{ robject.total }}</td>
+                <td>{{ robject.percent|floatformat:2 }}%</td>
+            </tr>
+
+        {% endfor %}
+          </table>
+      {% endif %}
 	  {% if taula.titol.enllac %}</a>{%endif%}
 	  {% if taula.titol.codi %}<a name="{{taula.titol.codi}}"> </a>{% endif %}	
 	  <table class="table table-striped" >
